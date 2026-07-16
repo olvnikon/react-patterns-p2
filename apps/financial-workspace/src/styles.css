@@ -640,6 +640,137 @@ select {
   font-weight: 700;
 }
 
+.workflow-mode-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.workflow-mode-switcher button,
+.actor-workspace-actions button {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid #b7c3d0;
+  border-radius: 7px;
+  color: #1c2430;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.workflow-mode-switcher button[aria-pressed="true"] {
+  color: #193d2a;
+  border-color: #91c8a5;
+  background: #e8f5ed;
+}
+
+.actor-tree {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid #bad7c6;
+  border-radius: 8px;
+  color: #244a35;
+  background: #edf8f1;
+}
+
+.actor-tree span {
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.actor-workspace-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actor-workspace-actions button:disabled {
+  color: #8994a3;
+  cursor: not-allowed;
+  background: #eef1f4;
+}
+
+.actor-ticket-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.actor-ticket-tab {
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.actor-ticket-tab > button {
+  min-height: 54px;
+  border: 1px solid #c9d2dc;
+  color: #384252;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.actor-ticket-tab > button:first-child {
+  min-width: 150px;
+  display: grid;
+  gap: 2px;
+  padding: 7px 10px;
+  border-radius: 7px 0 0 7px;
+  text-align: left;
+}
+
+.actor-ticket-tab > button:first-child[aria-pressed="true"] {
+  color: #193d2a;
+  border-color: #68a77f;
+  background: #e8f5ed;
+}
+
+.actor-ticket-tab > button:last-child {
+  width: 34px;
+  padding: 0;
+  border-left: 0;
+  border-radius: 0 7px 7px 0;
+  font-size: 1.1rem;
+}
+
+.actor-ticket-tab span {
+  font-size: 0.7rem;
+}
+
+.actor-workspace-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.actor-ticket-panel,
+.actor-activity {
+  align-content: start;
+}
+
+.actor-ticket-panel > div:first-child > div {
+  display: grid;
+  justify-content: initial;
+  gap: 0;
+}
+
+.actor-ticket-panel h2 {
+  margin: 4px 0 0;
+}
+
+.actor-activity .placeholder-list li {
+  justify-content: flex-start;
+}
+
 .placeholder-list {
   display: grid;
   gap: 10px;
@@ -744,6 +875,7 @@ select {
 
   .summary-grid,
   .analytics-layout,
+  .actor-workspace-layout,
   .bootstrap-graph,
   .diagnostics-grid,
   .workflow-layout,

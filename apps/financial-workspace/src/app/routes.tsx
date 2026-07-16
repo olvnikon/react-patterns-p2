@@ -7,7 +7,11 @@ import {
 
 import type { ApplicationDiagnostics } from '../composition/applicationTypes';
 import type { PortfolioAnalytics } from '@demo/feature-analytics-lab';
-import type { OrderTicketLogic } from '@demo/feature-workflow-lab';
+import type {
+  ExternalContextSource,
+  OrderTicketLogic,
+  WorkflowWorkspaceLogic,
+} from '@demo/feature-workflow-lab';
 import { AnalyticsRoute } from '../routes/AnalyticsRoute';
 import { DashboardRoute } from '../routes/DashboardRoute';
 import { OrderApprovalRoute } from '../routes/OrderApprovalRoute';
@@ -55,6 +59,8 @@ type CreateRouterInput = {
   diagnostics: ApplicationDiagnostics;
   analytics: PortfolioAnalytics;
   orderTicketLogic: OrderTicketLogic;
+  workflowWorkspaceLogic: WorkflowWorkspaceLogic;
+  externalContextSource: ExternalContextSource;
 };
 
 export function createAppRouter({
@@ -62,6 +68,8 @@ export function createAppRouter({
   diagnostics,
   analytics,
   orderTicketLogic,
+  workflowWorkspaceLogic,
+  externalContextSource,
 }: CreateRouterInput) {
   return createBrowserRouter([
     {
@@ -103,7 +111,13 @@ export function createAppRouter({
         },
         {
           path: 'workflows',
-          element: <WorkflowsRoute orderTicketLogic={orderTicketLogic} />,
+          element: (
+            <WorkflowsRoute
+              orderTicketLogic={orderTicketLogic}
+              workflowWorkspaceLogic={workflowWorkspaceLogic}
+              externalContextSource={externalContextSource}
+            />
+          ),
         },
       ],
     },

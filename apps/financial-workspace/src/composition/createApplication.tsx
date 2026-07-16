@@ -5,7 +5,9 @@ import {
 } from '@demo/feature-analytics-lab';
 import {
   createMockOrderTicketServices,
+  createMockExternalContextSource,
   createOrderTicketMachine,
+  createWorkflowWorkspaceMachine,
 } from '@demo/feature-workflow-lab';
 
 import { App } from '../app/App';
@@ -30,6 +32,11 @@ export function createApplication(
   const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
   const orderTicketServices = createMockOrderTicketServices();
   const orderTicketLogic = createOrderTicketMachine(orderTicketServices);
+  const externalContextSource = createMockExternalContextSource();
+  const workflowWorkspaceLogic = createWorkflowWorkspaceMachine(
+    orderTicketLogic,
+    externalContextSource,
+  );
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,
@@ -69,6 +76,11 @@ export function createApplication(
         lifetime: 'feature',
       },
       {
+        capability: 'Workflow actor workspace',
+        implementation: 'XState parent + spawned ticket actors',
+        lifetime: 'route',
+      },
+      {
         capability: 'Reports reducer',
         implementation: 'Lazy injectReducer wiring',
         lifetime: 'route',
@@ -81,6 +93,8 @@ export function createApplication(
     diagnostics,
     analytics,
     orderTicketLogic,
+    workflowWorkspaceLogic,
+    externalContextSource,
   });
 
   let reactRoot: ReactDOM.Root | undefined;

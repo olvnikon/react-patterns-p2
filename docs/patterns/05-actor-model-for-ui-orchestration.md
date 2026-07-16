@@ -1901,27 +1901,24 @@ One child actor failure should not automatically stop sibling actors unless the 
 
 ## 22. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
 packages/feature-workflow-lab/
   src/
-    domain.ts
-    services.ts
-    orderTicketMachine.ts
-    workspaceMachine.ts
-    createWorkspaceController.ts
-    createExternalContextAdapter.ts
-    WorkflowWorkspaceDemo.tsx
-    TicketActorCard.tsx
-    diagnostics.ts
+    model/
+      orderTicketTypes.ts
+      createOrderTicketMachine.ts
+      createWorkflowWorkspaceMachine.ts
+      externalContextSource.ts
+    WorkflowWorkspaceEntry.tsx
     index.ts
 
 apps/financial-workspace/src/routes/
   WorkflowsRoute.tsx
 
 apps/financial-workspace/src/composition/
-  createApplicationDependencies.ts
+  createApplication.ts
 ```
 
 Primary visible demo:
@@ -1930,9 +1927,11 @@ Primary visible demo:
 /workflows
 ```
 
-Status during documentation phase:
+Implementation status:
 
-> Planned. Source paths become definitive after Phase 6 implementation.
+> Implemented. `/workflows` Actor Workspace mode demonstrates spawned ticket
+> actors, targeted and broadcast messages, child-to-parent facts, external
+> context adaptation, selection, and `stopChild` cleanup.
 
 ---
 

@@ -46,7 +46,29 @@ export type OrderTicketServices = {
   }): Promise<OrderReceipt | null>;
 };
 
+export type OrderTicketParentEvent =
+  | {
+      type: 'ticket.accepted';
+      ticketId: string;
+      orderId: string;
+    }
+  | {
+      type: 'ticket.blocked';
+      ticketId: string;
+      message: string;
+    }
+  | {
+      type: 'ticket.failed';
+      ticketId: string;
+      message: string;
+    };
+
+export type OrderTicketParentRef = {
+  send(event: OrderTicketParentEvent): void;
+};
+
 export type OrderTicketInput = {
   ticketId: string;
   initialInstrumentId?: string;
+  parent?: OrderTicketParentRef;
 };

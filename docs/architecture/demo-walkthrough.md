@@ -79,6 +79,8 @@ Show:
 - three independent ticket actors;
 - different states at the same time;
 - a targeted external instrument message;
+- a workspace-wide BUY or SELL command;
+- an accepted child reporting a fact to the parent mailbox;
 - closing a ticket and stopping its actor.
 
 Say:

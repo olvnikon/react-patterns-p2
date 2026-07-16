@@ -111,6 +111,27 @@ The timeout path deliberately distinguishes an unknown browser outcome from a
 confirmed rejection. All checks, decisions, orders, and repositories remain
 fake and local.
 
+## Actor Model for UI Orchestration
+
+Switch `/workflows` to **Actor Workspace** mode to run several instances of the
+same ticket statechart:
+
+```txt
+Workspace Actor
+  ├── TICKET-01 Actor
+  ├── TICKET-02 Actor
+  ├── TICKET-03 Actor
+  └── External Context Adapter Actor
+```
+
+The workspace spawns and stops ticket actors, sends targeted or broadcast
+commands, and records facts reported by children. A mock external-context
+source is owned by a callback adapter actor and routes instrument context only
+to the selected ticket.
+
+The actors demonstrate logical concurrency and normally run on the main browser
+thread. Only the analytics Worker demonstrates background-thread execution.
+
 ## Pattern Map
 
 | Pattern | Where to see it | What to look for |

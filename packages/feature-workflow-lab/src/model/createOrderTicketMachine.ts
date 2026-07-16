@@ -11,6 +11,7 @@ import type {
   OrderReceipt,
   OrderSide,
   OrderTicketInput,
+  OrderTicketParentRef,
   OrderTicketServices,
 } from './orderTicketTypes';
 
@@ -22,6 +23,7 @@ type OrderTicketContext = {
   decision?: CheckDecision;
   receipt?: OrderReceipt;
   errorMessage?: string;
+  parent?: OrderTicketParentRef;
 };
 
 export type OrderTicketEvent =
@@ -147,6 +149,7 @@ export function createOrderTicketMachine(
       },
       outcome: 'accepted',
       idempotencyKey: crypto.randomUUID(),
+      parent: input.parent,
     }),
     states: {
       editing: {
@@ -234,6 +237,13 @@ export function createOrderTicketMachine(
         },
       },
       blocked: {
+        entry: ({ context }) => {
+          context.parent?.send({
+            type: 'ticket.blocked',
+            ticketId: context.ticketId,
+            message: context.decision?.message ?? 'Order blocked.',
+          });
+        },
         on: {
           EDIT: {
             target: 'editing',
@@ -321,6 +331,13 @@ export function createOrderTicketMachine(
         },
       },
       accepted: {
+        entry: ({ context }) => {
+          context.parent?.send({
+            type: 'ticket.accepted',
+            ticketId: context.ticketId,
+            orderId: context.receipt?.orderId ?? 'ORD-UNKNOWN',
+          });
+        },
         on: {
           RESET: {
             target: 'editing',
@@ -334,6 +351,13 @@ export function createOrderTicketMachine(
         },
       },
       failed: {
+        entry: ({ context }) => {
+          context.parent?.send({
+            type: 'ticket.failed',
+            ticketId: context.ticketId,
+            message: context.errorMessage ?? 'Order workflow failed.',
+          });
+        },
         on: {
           RETRY: {
             target: 'editing',
