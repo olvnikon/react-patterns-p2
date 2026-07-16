@@ -1,5 +1,10 @@
 # React Patterns Part 2 — Implementation Plan
 
+## Implementation status
+
+All ten phases are complete. The final verification commands are documented in
+[docs/architecture/final-verification.md](docs/architecture/final-verification.md).
+
 ## 1. Objective
 
 Extend the existing Financial Workspace SPA so it can be used to present and demonstrate these nine topics:

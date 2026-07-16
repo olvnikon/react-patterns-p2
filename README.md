@@ -16,7 +16,11 @@ Validation commands:
 ```sh
 corepack pnpm typecheck
 corepack pnpm build
+corepack pnpm verify:runtime
 ```
+
+See [the final verification report](docs/architecture/final-verification.md)
+for the tested runtime paths, production chunk checks, and safety audit.
 
 Routes:
 

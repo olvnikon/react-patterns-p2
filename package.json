@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "pnpm --filter @demo/app-financial-workspace dev",
     "build": "pnpm --filter @demo/app-financial-workspace build",
-    "typecheck": "pnpm --filter @demo/app-financial-workspace typecheck"
+    "typecheck": "pnpm --filter @demo/app-financial-workspace typecheck",
+    "verify:runtime": "pnpm --filter @demo/app-financial-workspace verify:runtime"
   },
   "devDependencies": {
     "@types/react": "18.2.64",

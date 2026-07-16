@@ -142,3 +142,4 @@ Additional concise guides:
 - [Part 2 architecture overview](architecture/part-2-overview.md)
 - [Pattern comparison](architecture/pattern-comparison.md)
 - [Live demo walkthrough](architecture/demo-walkthrough.md)
+- [Final verification](architecture/final-verification.md)
