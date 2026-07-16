@@ -7,6 +7,9 @@ let analyticsRoutePromise:
 let workflowsRoutePromise:
   | Promise<typeof import('./WorkflowsRoute')>
   | undefined;
+let panelsRoutePromise:
+  | Promise<typeof import('./PanelsRoute')>
+  | undefined;
 
 export function loadReportsRoute() {
   reportsRoutePromise ??= import('./ReportsRoute');
@@ -21,4 +24,9 @@ export function loadAnalyticsRoute() {
 export function loadWorkflowsRoute() {
   workflowsRoutePromise ??= import('./WorkflowsRoute');
   return workflowsRoutePromise;
+}
+
+export function loadPanelsRoute() {
+  panelsRoutePromise ??= import('./PanelsRoute');
+  return panelsRoutePromise;
 }

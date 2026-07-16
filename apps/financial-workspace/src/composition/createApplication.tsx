@@ -4,6 +4,9 @@ import {
   createPortfolioAnalytics,
 } from '@demo/feature-analytics-lab';
 import {
+  panelDefinitions,
+} from '@demo/feature-dynamic-panels';
+import {
   createMockOrderTicketServices,
   createMockExternalContextSource,
   createOrderTicketMachine,
@@ -21,6 +24,7 @@ import { createPreloadRegistry } from '../prefetch';
 import type { RuntimeConfig } from '../runtime';
 import {
   loadAnalyticsRoute,
+  loadPanelsRoute,
   loadReportsRoute,
   loadWorkflowsRoute,
 } from '../routes/routeModules';
@@ -60,6 +64,19 @@ export function createApplication(
     label: 'Workflows route module',
     load: loadWorkflowsRoute,
   });
+  prefetch.register({
+    id: 'route:panels',
+    label: 'Panels route module',
+    load: loadPanelsRoute,
+  });
+
+  for (const definition of Object.values(panelDefinitions)) {
+    prefetch.register({
+      id: definition.preloaderId,
+      label: `${definition.title} module`,
+      load: definition.load,
+    });
+  }
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,

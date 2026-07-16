@@ -29,6 +29,7 @@ Routes:
 | `/startup` | Part 2 foundation: Runtime Configuration and Composition Root diagnostics |
 | `/analytics` | Runtime-selected Strategy and Web Worker Offloading demo |
 | `/workflows` | Explicit order-ticket State Machine and Statechart demo |
+| `/panels` | Intent-prefetched dynamic panels with local degradation and recovery |
 
 ## Part 2 Foundation
 
@@ -152,6 +153,34 @@ Prefetch is disabled when runtime configuration selects `none` or when the
 browser reports a reduced-data preference. Direct navigation remains correct
 without any prior prefetch, and Reports reducer injection still occurs only on
 route activation.
+
+## Graceful Capability Degradation
+
+The `/panels` route contains a small dynamic panel catalogue and workspace:
+
+```txt
+Panel Host
+  → lazy module loader
+  → local config validation
+  → Suspense
+  → local Error Boundary
+  → panel-owned mock query and capability state
+```
+
+The three panel types demonstrate:
+
+- ready local data;
+- stale cached data with a timestamp;
+- retryable query failure;
+- invalid panel configuration;
+- optional degraded mode with unsafe actions disabled;
+- intentional disabled state;
+- isolated rendering failure with Retry or Remove.
+
+Hovering or focusing a catalogue card preloads its panel module. Adding the
+panel uses the same cached loader. A failed panel retains its frame and does not
+unmount or disable sibling panels. Critical startup failures remain handled by
+the higher application boundary.
 
 ## Pattern Map
 

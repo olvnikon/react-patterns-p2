@@ -25,6 +25,9 @@
       "@demo/shared-formatting": ["packages/shared-formatting/src/index.ts"],
       "@demo/shared-api": ["packages/shared-api/src/index.ts"],
       "@demo/feature-dashboard": ["packages/feature-dashboard/src/index.ts"],
+      "@demo/feature-dynamic-panels": [
+        "packages/feature-dynamic-panels/src/index.ts"
+      ],
       "@demo/feature-orders": ["packages/feature-orders/src/index.ts"],
       "@demo/feature-order-approval": [
         "packages/feature-order-approval/src/index.ts"

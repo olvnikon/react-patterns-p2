@@ -26,6 +26,9 @@ importers:
       '@demo/feature-dashboard':
         specifier: workspace:*
         version: link:../../packages/feature-dashboard
+      '@demo/feature-dynamic-panels':
+        specifier: workspace:*
+        version: link:../../packages/feature-dynamic-panels
       '@demo/feature-order-approval':
         specifier: workspace:*
         version: link:../../packages/feature-order-approval
@@ -119,6 +122,12 @@ importers:
         version: 18.2.0
 
   packages/feature-dashboard:
+    dependencies:
+      react:
+        specifier: '>=18.2.0'
+        version: 18.2.0
+
+  packages/feature-dynamic-panels:
     dependencies:
       react:
         specifier: '>=18.2.0'

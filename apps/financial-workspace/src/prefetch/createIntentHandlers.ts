@@ -7,7 +7,7 @@ type NavigatorWithConnection = Navigator & {
   };
 };
 
-function canPrefetch(mode: PrefetchMode): boolean {
+export function canIntentPrefetch(mode: PrefetchMode): boolean {
   if (mode !== 'intent') {
     return false;
   }
@@ -21,7 +21,7 @@ export function createIntentHandlers(
   mode: PrefetchMode,
 ) {
   function preload() {
-    if (!canPrefetch(mode)) {
+    if (!canIntentPrefetch(mode)) {
       return;
     }
 

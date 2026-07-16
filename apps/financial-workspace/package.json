@@ -13,6 +13,7 @@
     "@demo/feature-activity-feed": "workspace:*",
     "@demo/feature-analytics-lab": "workspace:*",
     "@demo/feature-dashboard": "workspace:*",
+    "@demo/feature-dynamic-panels": "workspace:*",
     "@demo/feature-order-approval": "workspace:*",
     "@demo/feature-orders": "workspace:*",
     "@demo/feature-portfolio-summary": "workspace:*",

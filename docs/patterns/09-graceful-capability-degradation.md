@@ -2836,39 +2836,27 @@ Actual activation decides whether the capability loads, retries, degrades, or fa
 
 ## 42. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
 packages/feature-dynamic-panels/
   src/
-    capabilityState.ts
-    panelDefinition.ts
-    panelRegistry.ts
-    createPanelRegistry.ts
-    validatePortfolioConfig.ts
-    createCapabilityController.ts
-    DynamicPanelHost.tsx
-    PanelErrorBoundary.tsx
-    PanelFrame.tsx
-    PanelLoading.tsx
-    PanelFailure.tsx
-    PanelDisabled.tsx
+    model/
+      panelTypes.ts
+      panelDefinitions.ts
+      panelLoaders.ts
+    internal/
+      DynamicPanelHost.tsx
+      PanelErrorBoundary.tsx
     panels/
       PortfolioOverviewPanel.tsx
       ActivitySummaryPanel.tsx
       ScenarioSummaryPanel.tsx
-      InvalidConfigurationPanel.tsx
-      UnavailablePanel.tsx
+    DynamicPanelsEntry.tsx
     index.ts
 
 apps/financial-workspace/src/routes/
   PanelsRoute.tsx
-
-apps/financial-workspace/src/composition/
-  createApplicationDependencies.ts
-
-apps/financial-workspace/src/prefetch/
-  panelPreloaders.ts
 ```
 
 Primary visible demo:
@@ -2877,9 +2865,11 @@ Primary visible demo:
 /panels
 ```
 
-Status during documentation phase:
+Implementation status:
 
-> Planned. Source paths become definitive after Phase 8 implementation.
+> Implemented. `/panels` demonstrates ready, stale, degraded, failed,
+> disabled, invalid-config, retry, remove, Suspense, and rendering-isolation
+> behavior across three lazy panel types.
 
 ---
 

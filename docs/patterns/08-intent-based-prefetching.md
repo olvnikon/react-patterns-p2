@@ -2441,9 +2441,16 @@ apps/financial-workspace/src/prefetch/
 apps/financial-workspace/src/routes/
   routeModules.ts
   StartupRoute.tsx
+  PanelsRoute.tsx
 
 apps/financial-workspace/src/app/
   routes.tsx
+
+packages/feature-dynamic-panels/src/
+  DynamicPanelsEntry.tsx
+  model/
+    panelDefinitions.ts
+    panelLoaders.ts
 ```
 
 Primary visible demo:
@@ -2451,15 +2458,16 @@ Primary visible demo:
 ```text
 main navigation
 /startup
+/panels
 ```
 
-The next Graceful Degradation phase will reuse the registry for lazy panels.
+The panel catalogue uses the same registry for hover/focus module preloading.
 
 Implementation status:
 
-> Implemented for Reports, Analytics, and Workflows route modules with shared
-> cached imports, hover/focus intent, reduced-data policy, visible status,
-> deduplication, and retryable failures.
+> Implemented for Reports, Analytics, Workflows, Panels, and individual panel
+> modules with shared cached imports, hover/focus intent, reduced-data policy,
+> visible status, deduplication, and retryable failures.
 
 ---
 

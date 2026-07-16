@@ -26,6 +26,7 @@ import {
 import type { PrefetchMode } from '../runtime';
 import {
   loadAnalyticsRoute,
+  loadPanelsRoute,
   loadReportsRoute,
   loadWorkflowsRoute,
 } from '../routes/routeModules';
@@ -111,6 +112,14 @@ function RootLayout({
             prefetchMode={prefetchMode}
           >
             Workflows
+          </IntentNavLink>
+          <IntentNavLink
+            to="/panels"
+            preloaderId="route:panels"
+            prefetch={prefetch}
+            prefetchMode={prefetchMode}
+          >
+            Panels
           </IntentNavLink>
         </nav>
       }
@@ -216,6 +225,23 @@ export function createAppRouter({
                     orderTicketLogic={orderTicketLogic}
                     workflowWorkspaceLogic={workflowWorkspaceLogic}
                     externalContextSource={externalContextSource}
+                  />
+                );
+              },
+            };
+          },
+        },
+        {
+          path: 'panels',
+          lazy: async () => {
+            const panelsRoute = await loadPanelsRoute();
+
+            return {
+              Component: function PanelsRouteComponent() {
+                return (
+                  <panelsRoute.PanelsRoute
+                    prefetch={prefetch}
+                    prefetchMode={prefetchMode}
                   />
                 );
               },
