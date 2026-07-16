@@ -98,6 +98,7 @@ Show:
 - a lazy item in `idle`;
 - hover or keyboard focus changing it to `loading`;
 - activation reusing the same promise;
+- `/startup` showing the same registry entry as `ready`;
 - normal activation still working without prefetch.
 
 Say:

@@ -2429,50 +2429,37 @@ Only actual activation determines whether the capability can load, retry, degrad
 
 ## 46. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
 apps/financial-workspace/src/prefetch/
-  types.ts
-  preloadRegistry.ts
+  preloadTypes.ts
   createPreloadRegistry.ts
-  prefetchPolicy.ts
-  networkPreferences.ts
   createIntentHandlers.ts
-  createDelayedHoverIntent.ts
-  routePreloaders.ts
-  analyticsPreloader.ts
-  PrefetchDiagnostics.tsx
-
-apps/financial-workspace/src/navigation/
-  PrefetchingNavLink.tsx
+  index.ts
 
 apps/financial-workspace/src/routes/
-  analyticsRouteModule.ts
-  workflowsRouteModule.ts
-  panelsRouteModule.ts
+  routeModules.ts
+  StartupRoute.tsx
 
-packages/feature-dynamic-panels/src/
-  panelDefinition.ts
-  createPanelPreloader.ts
-  PanelCatalogCard.tsx
-  createReadOnlyResource.ts
-
-apps/financial-workspace/src/routes/
-  PanelsRoute.tsx
+apps/financial-workspace/src/app/
+  routes.tsx
 ```
 
 Primary visible demo:
 
 ```text
-/panels
+main navigation
+/startup
 ```
 
-Navigation may demonstrate route-level prefetching across the whole application.
+The next Graceful Degradation phase will reuse the registry for lazy panels.
 
-Status during documentation phase:
+Implementation status:
 
-> Planned. Source paths become definitive after Phase 7 implementation.
+> Implemented for Reports, Analytics, and Workflows route modules with shared
+> cached imports, hover/focus intent, reduced-data policy, visible status,
+> deduplication, and retryable failures.
 
 ---
 

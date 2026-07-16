@@ -132,6 +132,27 @@ to the selected ticket.
 The actors demonstrate logical concurrency and normally run on the main browser
 thread. Only the analytics Worker demonstrates background-thread execution.
 
+## Intent-Based Prefetching
+
+Reports, Analytics, and Workflows now share cached lazy-module loaders between
+React Router and an application-owned preload registry.
+
+```txt
+hover or keyboard focus
+  → registry.preload(route)
+  → cached dynamic import
+  → later route activation reuses the same promise
+```
+
+Navigation dots expose `idle`, `loading`, `ready`, and `failed` status. The
+`/startup` route shows attempts and timing and provides manual preload buttons.
+Repeated intent signals are deduplicated. Failed preloads remain retryable.
+
+Prefetch is disabled when runtime configuration selects `none` or when the
+browser reports a reduced-data preference. Direct navigation remains correct
+without any prior prefetch, and Reports reducer injection still occurs only on
+route activation.
+
 ## Pattern Map
 
 | Pattern | Where to see it | What to look for |

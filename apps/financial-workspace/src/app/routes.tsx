@@ -1,5 +1,8 @@
 import { AppShell } from '@demo/ui-layouts';
 import {
+  useSyncExternalStore,
+} from 'react';
+import {
   NavLink,
   Outlet,
   createBrowserRouter,
@@ -12,15 +15,67 @@ import type {
   OrderTicketLogic,
   WorkflowWorkspaceLogic,
 } from '@demo/feature-workflow-lab';
-import { AnalyticsRoute } from '../routes/AnalyticsRoute';
 import { DashboardRoute } from '../routes/DashboardRoute';
 import { OrderApprovalRoute } from '../routes/OrderApprovalRoute';
 import { OrdersRoute } from '../routes/OrdersRoute';
 import { StartupRoute } from '../routes/StartupRoute';
-import { WorkflowsRoute } from '../routes/WorkflowsRoute';
+import {
+  createIntentHandlers,
+  type PreloadRegistry,
+} from '../prefetch';
+import type { PrefetchMode } from '../runtime';
+import {
+  loadAnalyticsRoute,
+  loadReportsRoute,
+  loadWorkflowsRoute,
+} from '../routes/routeModules';
 import type { AppStore } from './store/configureAppStore';
 
-function RootLayout() {
+function IntentNavLink({
+  to,
+  children,
+  preloaderId,
+  prefetch,
+  prefetchMode,
+}: {
+  to: string;
+  children: string;
+  preloaderId?: string;
+  prefetch: PreloadRegistry;
+  prefetchMode: PrefetchMode;
+}) {
+  const prefetchSnapshot = useSyncExternalStore(
+    prefetch.subscribe,
+    prefetch.getSnapshot,
+  );
+  const status = preloaderId
+    ? prefetchSnapshot.find((entry) => entry.id === preloaderId)?.status
+    : undefined;
+  const intentHandlers = preloaderId
+    ? createIntentHandlers(prefetch, preloaderId, prefetchMode)
+    : {};
+
+  return (
+    <NavLink to={to} {...intentHandlers}>
+      {children}
+      {status ? (
+        <span
+          className={`prefetch-indicator prefetch-indicator--${status}`}
+          title={`Prefetch: ${status}`}
+          aria-label={`Prefetch ${status}`}
+        />
+      ) : null}
+    </NavLink>
+  );
+}
+
+function RootLayout({
+  prefetch,
+  prefetchMode,
+}: {
+  prefetch: PreloadRegistry;
+  prefetchMode: PrefetchMode;
+}) {
   return (
     <AppShell
       title="Financial Workspace"
@@ -32,10 +87,31 @@ function RootLayout() {
           </NavLink>
           <NavLink to="/orders">Orders</NavLink>
           <NavLink to="/orders/ORD-1001/approval">Approval</NavLink>
-          <NavLink to="/reports">Reports</NavLink>
+          <IntentNavLink
+            to="/reports"
+            preloaderId="route:reports"
+            prefetch={prefetch}
+            prefetchMode={prefetchMode}
+          >
+            Reports
+          </IntentNavLink>
           <NavLink to="/startup">Part 2</NavLink>
-          <NavLink to="/analytics">Analytics</NavLink>
-          <NavLink to="/workflows">Workflows</NavLink>
+          <IntentNavLink
+            to="/analytics"
+            preloaderId="route:analytics"
+            prefetch={prefetch}
+            prefetchMode={prefetchMode}
+          >
+            Analytics
+          </IntentNavLink>
+          <IntentNavLink
+            to="/workflows"
+            preloaderId="route:workflows"
+            prefetch={prefetch}
+            prefetchMode={prefetchMode}
+          >
+            Workflows
+          </IntentNavLink>
         </nav>
       }
     >
@@ -61,6 +137,8 @@ type CreateRouterInput = {
   orderTicketLogic: OrderTicketLogic;
   workflowWorkspaceLogic: WorkflowWorkspaceLogic;
   externalContextSource: ExternalContextSource;
+  prefetch: PreloadRegistry;
+  prefetchMode: PrefetchMode;
 };
 
 export function createAppRouter({
@@ -70,11 +148,18 @@ export function createAppRouter({
   orderTicketLogic,
   workflowWorkspaceLogic,
   externalContextSource,
+  prefetch,
+  prefetchMode,
 }: CreateRouterInput) {
   return createBrowserRouter([
     {
       path: '/',
-      element: <RootLayout />,
+      element: (
+        <RootLayout
+          prefetch={prefetch}
+          prefetchMode={prefetchMode}
+        />
+      ),
       errorElement: <NotFoundRoute />,
       children: [
         {
@@ -92,7 +177,7 @@ export function createAppRouter({
         {
           path: 'reports',
           lazy: async () => {
-            const reportsRoute = await import('../routes/ReportsRoute');
+            const reportsRoute = await loadReportsRoute();
 
             reportsRoute.injectReportsReducer(store);
 
@@ -107,17 +192,35 @@ export function createAppRouter({
         },
         {
           path: 'analytics',
-          element: <AnalyticsRoute analytics={analytics} />,
+          lazy: async () => {
+            const analyticsRoute = await loadAnalyticsRoute();
+
+            return {
+              Component: function AnalyticsRouteComponent() {
+                return (
+                  <analyticsRoute.AnalyticsRoute analytics={analytics} />
+                );
+              },
+            };
+          },
         },
         {
           path: 'workflows',
-          element: (
-            <WorkflowsRoute
-              orderTicketLogic={orderTicketLogic}
-              workflowWorkspaceLogic={workflowWorkspaceLogic}
-              externalContextSource={externalContextSource}
-            />
-          ),
+          lazy: async () => {
+            const workflowsRoute = await loadWorkflowsRoute();
+
+            return {
+              Component: function WorkflowsRouteComponent() {
+                return (
+                  <workflowsRoute.WorkflowsRoute
+                    orderTicketLogic={orderTicketLogic}
+                    workflowWorkspaceLogic={workflowWorkspaceLogic}
+                    externalContextSource={externalContextSource}
+                  />
+                );
+              },
+            };
+          },
         },
       ],
     },

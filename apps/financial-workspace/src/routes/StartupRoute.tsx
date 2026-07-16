@@ -55,6 +55,10 @@ export function StartupRoute({ diagnostics }: StartupRouteProps) {
     diagnostics.bootstrap.subscribe,
     diagnostics.bootstrap.getSnapshot,
   );
+  const prefetch = useSyncExternalStore(
+    diagnostics.prefetch.subscribe,
+    diagnostics.prefetch.getSnapshot,
+  );
   const configEntries = Object.entries(diagnostics.runtimeConfig) as Array<
     [
       keyof ApplicationDiagnostics['runtimeConfig'],
@@ -212,6 +216,65 @@ export function StartupRoute({ diagnostics }: StartupRouteProps) {
           Infrastructure and platform context start in parallel. Reference data
           and workspace restoration wait for the demo session. Optional market
           data and analytics warmups begin only after the main view milestone.
+        </PatternNote>
+      </section>
+
+      <section className="bootstrap-section" aria-labelledby="prefetch-title">
+        <div className="bootstrap-heading">
+          <div>
+            <p className="eyebrow">Intent-Based Prefetching</p>
+            <h2 id="prefetch-title">Load likely routes before activation</h2>
+          </div>
+          <span className="pattern-tag">
+            Mode: {diagnostics.runtimeConfig.prefetchMode}
+          </span>
+        </div>
+
+        <div className="prefetch-diagnostics">
+          {prefetch.map((entry) => (
+            <article className="workspace-panel" key={entry.id}>
+              <div>
+                <div>
+                  <p className="eyebrow">{entry.id}</p>
+                  <h2>{entry.label}</h2>
+                </div>
+                <span
+                  className={`status-chip status-chip--${entry.status}`}
+                >
+                  {formatStatus(entry.status)}
+                </span>
+              </div>
+              <p>
+                Attempts: {entry.attempts}
+                {entry.durationMilliseconds !== undefined
+                  ? ` · ${Math.round(entry.durationMilliseconds)} ms`
+                  : ''}
+              </p>
+              {entry.errorMessage ? (
+                <p className="error-message">{entry.errorMessage}</p>
+              ) : null}
+              <button
+                type="button"
+                disabled={entry.status === 'loading' || entry.status === 'ready'}
+                onClick={() =>
+                  void diagnostics.prefetch.preload(entry.id).catch(() => {
+                    // The visible diagnostic state reports the failure.
+                  })
+                }
+              >
+                Preload now
+              </button>
+            </article>
+          ))}
+        </div>
+
+        <PatternNote
+          ariaLabel="Intent prefetching observation"
+          tags={['Hover', 'Keyboard focus', 'Deduplicated promise']}
+        >
+          Hover or focus Reports, Analytics, or Workflows in the main
+          navigation. The indicator and this diagnostic projection change
+          before navigation. Direct navigation still uses the same lazy loader.
         </PatternNote>
       </section>
     </section>

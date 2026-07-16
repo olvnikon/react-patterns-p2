@@ -17,7 +17,13 @@ import {
 } from '../app/store/configureAppStore';
 import { createAppDependencies } from '../app/store/appDependencies';
 import { createBootstrapRuntime } from '../bootstrap';
+import { createPreloadRegistry } from '../prefetch';
 import type { RuntimeConfig } from '../runtime';
+import {
+  loadAnalyticsRoute,
+  loadReportsRoute,
+  loadWorkflowsRoute,
+} from '../routes/routeModules';
 import type {
   ApplicationDiagnostics,
   ApplicationRuntime,
@@ -37,10 +43,28 @@ export function createApplication(
     orderTicketLogic,
     externalContextSource,
   );
+  const prefetch = createPreloadRegistry();
+
+  prefetch.register({
+    id: 'route:reports',
+    label: 'Reports route module',
+    load: loadReportsRoute,
+  });
+  prefetch.register({
+    id: 'route:analytics',
+    label: 'Analytics route module',
+    load: loadAnalyticsRoute,
+  });
+  prefetch.register({
+    id: 'route:workflows',
+    label: 'Workflows route module',
+    load: loadWorkflowsRoute,
+  });
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,
     bootstrap,
+    prefetch,
     wiring: Object.freeze([
       {
         capability: 'Order approval repository',
@@ -95,6 +119,8 @@ export function createApplication(
     orderTicketLogic,
     workflowWorkspaceLogic,
     externalContextSource,
+    prefetch,
+    prefetchMode: runtimeConfig.prefetchMode,
   });
 
   let reactRoot: ReactDOM.Root | undefined;
