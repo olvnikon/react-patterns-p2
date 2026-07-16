@@ -6,6 +6,8 @@ import {
 } from 'react-router-dom';
 
 import type { ApplicationDiagnostics } from '../composition/applicationTypes';
+import type { PortfolioAnalytics } from '@demo/feature-analytics-lab';
+import { AnalyticsRoute } from '../routes/AnalyticsRoute';
 import { DashboardRoute } from '../routes/DashboardRoute';
 import { OrderApprovalRoute } from '../routes/OrderApprovalRoute';
 import { OrdersRoute } from '../routes/OrdersRoute';
@@ -26,6 +28,7 @@ function RootLayout() {
           <NavLink to="/orders/ORD-1001/approval">Approval</NavLink>
           <NavLink to="/reports">Reports</NavLink>
           <NavLink to="/startup">Part 2</NavLink>
+          <NavLink to="/analytics">Analytics</NavLink>
         </nav>
       }
     >
@@ -47,11 +50,13 @@ function NotFoundRoute() {
 type CreateRouterInput = {
   store: AppStore;
   diagnostics: ApplicationDiagnostics;
+  analytics: PortfolioAnalytics;
 };
 
 export function createAppRouter({
   store,
   diagnostics,
+  analytics,
 }: CreateRouterInput) {
   return createBrowserRouter([
     {
@@ -86,6 +91,10 @@ export function createAppRouter({
         {
           path: 'startup',
           element: <StartupRoute diagnostics={diagnostics} />,
+        },
+        {
+          path: 'analytics',
+          element: <AnalyticsRoute analytics={analytics} />,
         },
       ],
     },

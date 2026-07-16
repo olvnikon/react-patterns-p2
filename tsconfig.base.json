@@ -41,6 +41,9 @@
       ],
       "@demo/feature-activity-feed": [
         "packages/feature-activity-feed/src/index.ts"
+      ],
+      "@demo/feature-analytics-lab": [
+        "packages/feature-analytics-lab/src/index.ts"
       ]
     }
   }

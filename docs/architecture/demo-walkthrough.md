@@ -32,6 +32,8 @@ Show:
 - the selected Direct or Worker implementation;
 - the same fake input and result shape;
 - a responsiveness indicator while the Worker calculation runs.
+- the application restart that changes `resources.json` profile and causes the
+  Composition Root to select the other Strategy.
 
 Say:
 

@@ -461,6 +461,135 @@ select {
   color: #667085;
 }
 
+.analytics-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+  gap: 16px;
+}
+
+.analytics-controls,
+.analytics-results {
+  align-content: start;
+}
+
+.analytics-strategy-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.analytics-strategy-heading > div {
+  display: grid;
+  justify-content: initial;
+  gap: 0;
+}
+
+.analytics-strategy-heading h2 {
+  margin: 4px 0 0;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+.strategy-switcher {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 7px;
+  background: #eef1f4;
+}
+
+.strategy-switcher span {
+  color: #4f5b68;
+  font-weight: 700;
+}
+
+.strategy-switcher button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #b7c3d0;
+  border-radius: 7px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.strategy-switcher button:disabled {
+  color: #193d2a;
+  border-color: #91c8a5;
+  background: #e8f5ed;
+  cursor: default;
+}
+
+.heartbeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #4f5b68;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.heartbeat span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #68a77f;
+  animation: heartbeat-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes heartbeat-pulse {
+  from {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.analytics-progress {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e3e8ee;
+}
+
+.analytics-progress div {
+  height: 100%;
+  border-radius: inherit;
+  background: #68a77f;
+  transition: width 100ms linear;
+}
+
+.analytics-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.analytics-result-grid div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid #e3e8ee;
+  border-radius: 7px;
+}
+
+.analytics-result-grid dt {
+  color: #667085;
+  font-size: 0.8rem;
+}
+
+.analytics-result-grid dd {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
 .placeholder-list {
   display: grid;
   gap: 10px;
@@ -564,6 +693,7 @@ select {
   }
 
   .summary-grid,
+  .analytics-layout,
   .bootstrap-graph,
   .diagnostics-grid,
   .workspace-grid,

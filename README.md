@@ -27,6 +27,7 @@ Routes:
 | `/orders/:orderId/approval` | Order Approval workflow with React Adapter and epics |
 | `/reports` | Lazy route with dynamically injected Reports reducer |
 | `/startup` | Part 2 foundation: Runtime Configuration and Composition Root diagnostics |
+| `/analytics` | Runtime-selected Strategy and Web Worker Offloading demo |
 
 ## Part 2 Foundation
 
@@ -63,6 +64,27 @@ profiles visible for the presentation.
 
 No backend application is part of this repository. All repository
 implementations remain fake, local, and mocked.
+
+## Strategy and Web Worker Analytics
+
+The `/analytics` route uses one stable capability:
+
+```txt
+PortfolioAnalytics
+  ├── DirectAnalyticsStrategy
+  └── WorkerAnalyticsStrategy
+```
+
+The Composition Root selects the implementation from runtime configuration.
+The default `resources.json` selects the Worker Strategy. The presentation UI
+can restart with `resources.direct.json` by setting the local `config=direct`
+demo profile.
+
+Both Strategies run the same deterministic synthetic algorithm. The Direct
+Strategy intentionally performs it on the browser main thread. The Worker
+Strategy uses a typed native module Worker with progress, cancellation,
+request IDs, and cleanup. The calculation is an artificial workload for
+architecture demonstration only; it is not a real financial or risk formula.
 
 ## Pattern Map
 

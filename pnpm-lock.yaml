@@ -20,6 +20,9 @@ importers:
       '@demo/feature-activity-feed':
         specifier: workspace:*
         version: link:../../packages/feature-activity-feed
+      '@demo/feature-analytics-lab':
+        specifier: workspace:*
+        version: link:../../packages/feature-analytics-lab
       '@demo/feature-dashboard':
         specifier: workspace:*
         version: link:../../packages/feature-dashboard
@@ -101,6 +104,12 @@ importers:
         version: 5.1.6
 
   packages/feature-activity-feed:
+    dependencies:
+      react:
+        specifier: '>=18.2.0'
+        version: 18.2.0
+
+  packages/feature-analytics-lab:
     dependencies:
       react:
         specifier: '>=18.2.0'

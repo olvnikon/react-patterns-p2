@@ -1489,31 +1489,25 @@ Worker fails
 
 ## 14. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
 packages/feature-analytics-lab/
   src/
-    domain.ts
-    portfolioAnalytics.ts
-    calculateScenario.ts
-    directAnalyticsStrategy.ts
-    workerAnalyticsStrategy.ts
-    workerScenarioClient.ts
-    createPortfolioAnalytics.ts
-    createAnalyticsFacade.ts
-    AnalyticsDemo.tsx
-    index.ts
-
-packages/shared-workers/
-  src/
-    createWorkerScenarioClient.ts
-    scenario.worker.ts
-    protocol.ts
+    model/
+      analyticsTypes.ts
+      calculateScenario.ts
+      directAnalyticsStrategy.ts
+      workerAnalyticsStrategy.ts
+      createPortfolioAnalytics.ts
+    worker/
+      workerProtocol.ts
+      scenario.worker.ts
+      createWorkerScenarioClient.ts
+    AnalyticsEntry.tsx
     index.ts
 
 apps/financial-workspace/src/composition/
-  createApplicationDependencies.ts
   createApplication.ts
 
 apps/financial-workspace/src/routes/
@@ -1526,9 +1520,10 @@ Primary visible demo:
 /analytics
 ```
 
-Status during documentation phase:
+Implementation status:
 
-> Planned. Source paths become definitive after Phase 4 implementation.
+> Implemented. Runtime configuration selects the Direct or Worker Strategy in
+> the Composition Root, and `/analytics` displays the active implementation.
 
 ---
 

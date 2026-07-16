@@ -2060,32 +2060,27 @@ The architecture should remain visible.
 
 ## 36. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
-packages/shared-workers/
-  src/
-    protocol.ts
-    scenario.worker.ts
-    runScenarioInBatches.ts
-    createWorkerScenarioClient.ts
-    index.ts
-
 packages/feature-analytics-lab/
   src/
-    domain.ts
-    calculateScenarioSync.ts
-    portfolioAnalytics.ts
-    workerAnalyticsStrategy.ts
-    createAnalyticsFacade.ts
-    AnalyticsDemo.tsx
+    model/
+      analyticsTypes.ts
+      calculateScenario.ts
+      workerAnalyticsStrategy.ts
+    worker/
+      workerProtocol.ts
+      scenario.worker.ts
+      createWorkerScenarioClient.ts
+    AnalyticsEntry.tsx
     index.ts
 
 apps/financial-workspace/src/routes/
   AnalyticsRoute.tsx
 
 apps/financial-workspace/src/composition/
-  createApplicationDependencies.ts
+  createApplication.ts
 ```
 
 Primary visible demo:
@@ -2094,9 +2089,10 @@ Primary visible demo:
 /analytics
 ```
 
-Status during documentation phase:
+Implementation status:
 
-> Planned. Source paths become definitive after Phase 4 implementation.
+> Implemented with one native module Worker, progress events, cancellation,
+> request IDs, stale UI-result protection, and application-lifetime cleanup.
 
 ---
 

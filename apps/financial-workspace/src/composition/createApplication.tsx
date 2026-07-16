@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {
+  createPortfolioAnalytics,
+} from '@demo/feature-analytics-lab';
 
 import { App } from '../app/App';
 import { createAppRouter } from '../app/routes';
@@ -20,6 +23,7 @@ export function createApplication(
   const dependencies = createAppDependencies();
   const store = configureAppStore(dependencies);
   const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
+  const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,
@@ -46,6 +50,14 @@ export function createApplication(
         lifetime: 'application',
       },
       {
+        capability: 'Portfolio analytics',
+        implementation:
+          analytics.strategyName === 'worker'
+            ? 'WorkerAnalyticsStrategy'
+            : 'DirectAnalyticsStrategy',
+        lifetime: 'application',
+      },
+      {
         capability: 'Reports reducer',
         implementation: 'Lazy injectReducer wiring',
         lifetime: 'route',
@@ -56,6 +68,7 @@ export function createApplication(
   const router = createAppRouter({
     store,
     diagnostics,
+    analytics,
   });
 
   let reactRoot: ReactDOM.Root | undefined;
@@ -81,6 +94,7 @@ export function createApplication(
     stop() {
       reactRoot?.unmount();
       reactRoot = undefined;
+      analytics.dispose();
       bootstrap.stop();
     },
   };

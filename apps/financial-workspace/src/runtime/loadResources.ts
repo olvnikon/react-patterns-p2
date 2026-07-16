@@ -53,7 +53,10 @@ function parseResourceDocument(value: unknown): ResourceDocument {
 }
 
 export async function loadResources(): Promise<ResourceDocument> {
-  const resourceUrl = `${import.meta.env.BASE_URL}resources.json`;
+  const demoConfig = new URLSearchParams(window.location.search).get('config');
+  const resourceFile =
+    demoConfig === 'direct' ? 'resources.direct.json' : 'resources.json';
+  const resourceUrl = `${import.meta.env.BASE_URL}${resourceFile}`;
   const response = await fetch(resourceUrl, {
     cache: 'no-store',
   });
