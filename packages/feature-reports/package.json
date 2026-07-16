@@ -1,0 +1,21 @@
+{
+  "name": "@demo/feature-reports",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@demo/shared-formatting": "workspace:*",
+    "@reduxjs/toolkit": "2.2.1",
+    "react-redux": "9.1.0",
+    "redux": "5.0.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0"
+  }
+}

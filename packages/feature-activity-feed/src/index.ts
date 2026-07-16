@@ -1,0 +1,1 @@
+export { ActivityFeedEntry } from './ActivityFeedEntry';

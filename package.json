@@ -1,0 +1,15 @@
+{
+  "name": "financial-workspace-spa",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.5.2",
+  "scripts": {
+    "dev": "pnpm --filter @demo/app-financial-workspace dev",
+    "build": "pnpm --filter @demo/app-financial-workspace build",
+    "typecheck": "pnpm --filter @demo/app-financial-workspace typecheck"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.64",
+    "@types/react-dom": "18.2.21"
+  }
+}

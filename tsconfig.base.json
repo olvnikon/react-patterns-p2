@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@demo/app-financial-workspace": [
+        "apps/financial-workspace/src/app/App.tsx"
+      ],
+      "@demo/ui-layouts": ["packages/ui-layouts/src/index.ts"],
+      "@demo/shared-types": ["packages/shared-types/src/index.ts"],
+      "@demo/shared-formatting": ["packages/shared-formatting/src/index.ts"],
+      "@demo/shared-api": ["packages/shared-api/src/index.ts"],
+      "@demo/feature-dashboard": ["packages/feature-dashboard/src/index.ts"],
+      "@demo/feature-orders": ["packages/feature-orders/src/index.ts"],
+      "@demo/feature-order-approval": [
+        "packages/feature-order-approval/src/index.ts"
+      ],
+      "@demo/feature-reports": ["packages/feature-reports/src/index.ts"],
+      "@demo/feature-workspace-status": [
+        "packages/feature-workspace-status/src/index.ts"
+      ],
+      "@demo/feature-portfolio-summary": [
+        "packages/feature-portfolio-summary/src/index.ts"
+      ],
+      "@demo/feature-risk-summary": [
+        "packages/feature-risk-summary/src/index.ts"
+      ],
+      "@demo/feature-activity-feed": [
+        "packages/feature-activity-feed/src/index.ts"
+      ]
+    }
+  }
+}
