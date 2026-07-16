@@ -19,6 +19,7 @@ flowchart TD
     Bootstrap --> Ready[Main View Ready]
     Ready --> Router[Client-side Router]
     Router --> Existing[Part 1 Routes]
+    Router --> Map[/architecture]
     Router --> Startup[/startup]
     Router --> Workflows[/workflows]
     Router --> Analytics[/analytics]
@@ -27,7 +28,25 @@ flowchart TD
 
 There is no backend application in this repository. API-shaped work is represented by fake local repositories.
 
-## Four focused demo routes
+## One map and four focused demo routes
+
+### `/architecture`
+
+Provides the concise presentation entry point:
+
+```text
+Construction
+    Runtime Configuration, Composition Root, Strategy
+
+Workflow and orchestration
+    State Machines, Actor Model, Bootstrap Task Graph
+
+Performance and resilience
+    Web Workers, Intent Prefetching, Graceful Degradation
+```
+
+Each card asks the primary question answered by the pattern and links to the
+smallest relevant interactive demo.
 
 ### `/startup`
 

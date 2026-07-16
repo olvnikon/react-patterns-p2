@@ -23,6 +23,7 @@ Routes:
 | Route | Purpose |
 | --- | --- |
 | `/` | Dashboard overview and demo entry point |
+| `/architecture` | Visual map of all nine Part 2 patterns and their boundaries |
 | `/orders` | Flat application composition with slot-based layout |
 | `/orders/:orderId/approval` | Order Approval workflow with React Adapter and epics |
 | `/reports` | Lazy route with dynamically injected Reports reducer |
@@ -184,6 +185,25 @@ the higher application boundary.
 
 ## Pattern Map
 
+### Part 2
+
+| Pattern or practice | Where to see it | What to observe |
+| --- | --- | --- |
+| Runtime Configuration | `/startup`; `apps/financial-workspace/src/runtime` | `resources.json` is mapped and validated into an immutable typed configuration before application creation. |
+| Composition Root | `/startup`; `apps/financial-workspace/src/composition` | One application boundary creates services, strategies, actors, the store, router, and cleanup ownership. |
+| Strategy Pattern | `/analytics`; `packages/feature-analytics-lab` | Direct and Worker-backed implementations satisfy the same `PortfolioAnalytics` contract. |
+| State Machines and Statecharts | `/workflows` in Single Ticket mode | One explicit workflow owns valid states, guards, async work, timeout, and reconciliation. |
+| Actor Model for UI Orchestration | `/workflows` in Actor Workspace mode | Independent ticket actors own private state and lifecycle and communicate through messages. |
+| Declarative Bootstrap Task Graph | `/startup`; `apps/financial-workspace/src/bootstrap` | Named XState-managed tasks expose dependencies, parallelism, criticality, retry, and readiness. |
+| Web Worker Offloading | `/analytics` with Worker Strategy | CPU-heavy synthetic work runs in a module Worker while the main-thread heartbeat remains responsive. |
+| Intent-Based Prefetching | Part 2 navigation, `/startup`, and `/panels` | Hover or keyboard focus starts a cached lazy import that route or panel activation later reuses. |
+| Graceful Capability Degradation | `/panels` | A panel can become stale, degraded, failed, or disabled without crashing its siblings. |
+
+Open `/architecture` for the concise in-application map and links to each
+demonstration.
+
+### Part 1
+
 | Pattern | Where to see it | What to look for |
 | --- | --- | --- |
 | Feature Modules with Public API | `packages/feature-*`, `packages/shared-*`, `packages/ui-layouts` | Each package exposes `src/index.ts`; app imports package roots only. |
@@ -215,6 +235,9 @@ packages/
   feature-order-approval/
   feature-reports/
   feature-workspace-status/
+  feature-workflow-lab/
+  feature-analytics-lab/
+  feature-dynamic-panels/
   feature-portfolio-summary/
   feature-risk-summary/
   feature-activity-feed/
@@ -393,22 +416,50 @@ Reducer injection does not automatically clear route state. This demo keeps Repo
 
 ## Demo Walkthrough
 
-1. Start at `/`.
-   Point out the dashboard cards, the pattern labels, and the optional Workspace Status external-store demo.
+1. Start at `/architecture`.
+   Use the nine cards to introduce the boundaries: configuration chooses,
+   composition wires, strategy varies, statecharts constrain, actors
+   coordinate, bootstrap schedules, Workers offload, intent anticipates, and
+   degradation contains.
 
-2. Open `/orders`.
+2. Open `/startup`.
+   Show validated runtime configuration, Composition Root diagnostics, the
+   bootstrap graph, Main View Ready, optional failure, and Retry.
+
+3. Open `/analytics`.
+   Compare Direct and Worker strategies behind the same contract. Run,
+   supersede, and cancel a synthetic calculation while observing the
+   main-thread heartbeat.
+
+4. Open `/workflows`.
+   First demonstrate one statechart, including the outcome-unknown and
+   reconciliation path. Then switch to Actor Workspace mode to show several
+   independent instances and targeted messages.
+
+5. Demonstrate intent prefetching.
+   Return to the navigation, hover or focus a lazy route, then inspect the
+   preload status on `/startup`. Activation reuses the same cached promise.
+
+6. Open `/panels`.
+   Trigger stale, degraded, query-failure, invalid-config, and render-failure
+   examples. Confirm that Retry and Remove are local and sibling panels remain
+   usable.
+
+7. Optionally return to `/` for the Part 1 entry points.
+
+8. Open `/orders`.
    Explain that the route composes portfolio summary, orders, risk summary, and activity feed directly into layout slots.
 
-3. Open `/orders/ORD-1001/approval`.
+9. Open `/orders/ORD-1001/approval`.
    Explain that the UI talks to `useOrderApproval(orderId)` through `state + api`.
 
-4. Add an approval comment and trigger approve or reject.
+10. Add an approval comment and trigger approve or reject.
    Explain that the adapter dispatches feature actions and the epic performs async workflow orchestration through injected dependencies.
 
-5. Open `/reports`.
+11. Open `/reports`.
    Explain that the route bundle is lazy-loaded and the Reports reducer is injected before the page renders.
 
-6. Change report type, edit the portfolio filter, generate a report, and reset.
+12. Change report type, edit the portfolio filter, generate a report, and reset.
    Explain that Reports uses an injected route reducer plus a lightweight React Adapter.
 
 ## Simplifications

@@ -24,6 +24,7 @@ import {
   type PreloadRegistry,
 } from '../prefetch';
 import type { PrefetchMode } from '../runtime';
+import { ArchitectureRoute } from '../routes/ArchitectureRoute';
 import {
   loadAnalyticsRoute,
   loadPanelsRoute,
@@ -83,44 +84,51 @@ function RootLayout({
       subtitle="Generic React architecture showcase"
       navigation={
         <nav className="app-navigation" aria-label="Primary">
-          <NavLink to="/" end>
-            Dashboard
-          </NavLink>
-          <NavLink to="/orders">Orders</NavLink>
-          <NavLink to="/orders/ORD-1001/approval">Approval</NavLink>
-          <IntentNavLink
-            to="/reports"
-            preloaderId="route:reports"
-            prefetch={prefetch}
-            prefetchMode={prefetchMode}
-          >
-            Reports
-          </IntentNavLink>
-          <NavLink to="/startup">Part 2</NavLink>
-          <IntentNavLink
-            to="/analytics"
-            preloaderId="route:analytics"
-            prefetch={prefetch}
-            prefetchMode={prefetchMode}
-          >
-            Analytics
-          </IntentNavLink>
-          <IntentNavLink
-            to="/workflows"
-            preloaderId="route:workflows"
-            prefetch={prefetch}
-            prefetchMode={prefetchMode}
-          >
-            Workflows
-          </IntentNavLink>
-          <IntentNavLink
-            to="/panels"
-            preloaderId="route:panels"
-            prefetch={prefetch}
-            prefetchMode={prefetchMode}
-          >
-            Panels
-          </IntentNavLink>
+          <div className="app-navigation__group">
+            <span className="app-navigation__label">Part 1</span>
+            <NavLink to="/" end>
+              Dashboard
+            </NavLink>
+            <NavLink to="/orders">Orders</NavLink>
+            <NavLink to="/orders/ORD-1001/approval">Approval</NavLink>
+            <IntentNavLink
+              to="/reports"
+              preloaderId="route:reports"
+              prefetch={prefetch}
+              prefetchMode={prefetchMode}
+            >
+              Reports
+            </IntentNavLink>
+          </div>
+          <div className="app-navigation__group">
+            <span className="app-navigation__label">Part 2</span>
+            <NavLink to="/architecture">Map</NavLink>
+            <NavLink to="/startup">Startup</NavLink>
+            <IntentNavLink
+              to="/workflows"
+              preloaderId="route:workflows"
+              prefetch={prefetch}
+              prefetchMode={prefetchMode}
+            >
+              Workflows
+            </IntentNavLink>
+            <IntentNavLink
+              to="/analytics"
+              preloaderId="route:analytics"
+              prefetch={prefetch}
+              prefetchMode={prefetchMode}
+            >
+              Analytics
+            </IntentNavLink>
+            <IntentNavLink
+              to="/panels"
+              preloaderId="route:panels"
+              prefetch={prefetch}
+              prefetchMode={prefetchMode}
+            >
+              Panels
+            </IntentNavLink>
+          </div>
         </nav>
       }
     >
@@ -194,6 +202,10 @@ export function createAppRouter({
               Component: reportsRoute.ReportsRoute,
             };
           },
+        },
+        {
+          path: 'architecture',
+          element: <ArchitectureRoute />,
         },
         {
           path: 'startup',

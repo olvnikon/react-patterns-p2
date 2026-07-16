@@ -29,6 +29,15 @@ select {
   font: inherit;
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(64, 132, 91, 0.35);
+  outline-offset: 2px;
+}
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -74,6 +83,26 @@ select {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.app-navigation__group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.app-navigation__group + .app-navigation__group {
+  padding-left: 8px;
+  border-left: 1px solid #d7dde5;
+}
+
+.app-navigation__label {
+  margin: 0 2px 0 4px;
+  color: #8994a3;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .app-navigation a {
@@ -176,6 +205,16 @@ select {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+}
+
+.part-two-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.part-two-grid .summary-card {
+  align-content: start;
 }
 
 .summary-card,
@@ -994,6 +1033,90 @@ select {
   background: #f4f6f8;
 }
 
+.architecture-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid #bad7c6;
+  border-radius: 8px;
+  background: #edf8f1;
+}
+
+.architecture-flow span {
+  padding: 8px;
+  border-radius: 6px;
+  color: #244a35;
+  background: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.pattern-group {
+  display: grid;
+  gap: 12px;
+}
+
+.pattern-group > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.architecture-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.architecture-card {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+  color: inherit;
+  background: #ffffff;
+  text-decoration: none;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.architecture-card:hover {
+  border-color: #91c8a5;
+  transform: translateY(-2px);
+}
+
+.architecture-card > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #667085;
+  font-size: 0.75rem;
+}
+
+.architecture-card h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.architecture-card p {
+  margin: 0;
+}
+
+.architecture-card small {
+  color: #667085;
+}
+
+.architecture-card strong {
+  color: #244a35;
+  font-size: 0.8rem;
+}
+
 .placeholder-list {
   display: grid;
   gap: 10px;
@@ -1096,17 +1219,28 @@ select {
     justify-content: flex-start;
   }
 
+  .app-navigation__group + .app-navigation__group {
+    padding-left: 0;
+    border-left: 0;
+  }
+
   .summary-grid,
   .analytics-layout,
+  .architecture-grid,
   .actor-workspace-layout,
   .bootstrap-graph,
   .diagnostics-grid,
   .dynamic-panel-grid,
+  .part-two-grid,
   .panel-catalog,
   .prefetch-diagnostics,
   .workflow-layout,
   .workspace-grid,
   .workspace-layout {
     grid-template-columns: 1fr;
+  }
+
+  .architecture-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

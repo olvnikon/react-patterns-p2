@@ -6,7 +6,8 @@ The full walkthrough should take roughly 20–30 minutes. Each stop should expla
 
 ## 1. Start the application
 
-Open `/startup`.
+Open `/architecture`, introduce the nine responsibilities, and then continue to
+`/startup`.
 
 Show:
 

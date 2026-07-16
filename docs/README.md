@@ -53,7 +53,7 @@ Repository contracts may look like API clients so the UI architecture remains re
 The implementation should remain easy to explain:
 
 ```text
-4 Part 2 routes
+5 Part 2 routes, including the pattern map
 3 new feature packages
 1 runtime resource document
 1 explicit bootstrap machine
