@@ -7,6 +7,7 @@ import {
   configureAppStore,
 } from '../app/store/configureAppStore';
 import { createAppDependencies } from '../app/store/appDependencies';
+import { createBootstrapRuntime } from '../bootstrap';
 import type { RuntimeConfig } from '../runtime';
 import type {
   ApplicationDiagnostics,
@@ -18,9 +19,11 @@ export function createApplication(
 ): ApplicationRuntime {
   const dependencies = createAppDependencies();
   const store = configureAppStore(dependencies);
+  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,
+    bootstrap,
     wiring: Object.freeze([
       {
         capability: 'Order approval repository',
@@ -59,6 +62,10 @@ export function createApplication(
 
   return {
     diagnostics,
+    async start() {
+      bootstrap.start();
+      await bootstrap.waitUntilMainViewReady();
+    },
     mount(rootElement) {
       if (reactRoot) {
         return;
@@ -74,6 +81,7 @@ export function createApplication(
     stop() {
       reactRoot?.unmount();
       reactRoot = undefined;
+      bootstrap.stop();
     },
   };
 }

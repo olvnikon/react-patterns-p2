@@ -64,15 +64,18 @@ public/resources.json
         ↓
 Runtime config loader and validator
         ↓
-Declarative bootstrap task graph
-        ↓
 Composition Root
         ├── repositories and platform adapters
         ├── selected strategies
         ├── Redux store and epic dependencies
         ├── actor logic
         ├── Worker-backed services
-        └── router and React application
+        ├── router
+        └── Declarative bootstrap task graph
+                ↓
+        Main View Ready
+                ↓
+        React application
                 ↓
 Part 1 routes + Part 2 demo routes
 ```

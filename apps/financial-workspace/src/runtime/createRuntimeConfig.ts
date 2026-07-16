@@ -82,7 +82,12 @@ export function createRuntimeConfig(
     bootstrapProfile: readEnumValue<BootstrapProfile>(
       values,
       'bootstrapProfile',
-      ['standard', 'slow-startup', 'optional-failure'],
+      [
+        'standard',
+        'slow-startup',
+        'optional-failure',
+        'critical-failure',
+      ],
       'standard',
     ),
     contextProvider: readEnumValue<ContextProviderName>(

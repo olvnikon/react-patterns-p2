@@ -36,6 +36,8 @@ Part 2 extends the same client-side JAMstack SPA. The browser now starts through
 resources.json
   → validated immutable RuntimeConfig
   → Composition Root
+  → XState bootstrap task graph
+  → Main View Ready
   → dependencies, store, router, and React application
 ```
 
@@ -51,8 +53,13 @@ apps/financial-workspace/src/composition/
 ```
 
 It creates the existing mock epic dependencies, Redux store, router, and React
-application runtime. The `/startup` route makes the validated choices and
-concrete wiring visible for the presentation.
+application runtime. It also creates a small XState bootstrap runtime.
+
+The bootstrap graph starts independent tasks in parallel, waits for explicit
+dependencies, distinguishes critical and optional work, and lets React mount at
+the Main View Ready milestone while optional warmups continue. The `/startup`
+route makes configuration, concrete wiring, task state, retry, and replay
+profiles visible for the presentation.
 
 No backend application is part of this repository. All repository
 implementations remain fake, local, and mocked.

@@ -56,6 +56,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: 2.2.1
         version: 2.2.1(react-redux@9.1.0(@types/react@18.2.64)(react@18.2.0)(redux@5.0.1))(react@18.2.0)
+      '@xstate/react':
+        specifier: ^6.1.0
+        version: 6.1.0(@types/react@18.2.64)(react@18.2.0)(xstate@5.32.5)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -77,6 +80,9 @@ importers:
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
+      xstate:
+        specifier: ^5.32.5
+        version: 5.32.5
     devDependencies:
       '@types/react':
         specifier: 18.2.64
@@ -609,6 +615,15 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
 
+  '@xstate/react@6.1.0':
+    resolution: {integrity: sha512-ep9F0jGTI63B/jE8GHdMpUqtuz7yRebNaKv8EMUaiSi29NOglywc2X2YSOV/ygbIK+LtmgZ0q9anoEA2iBSEOw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      xstate: ^5.28.0
+    peerDependenciesMeta:
+      xstate:
+        optional: true
+
   baseline-browser-mapping@2.10.32:
     resolution: {integrity: sha512-wbPvpyjJPC0zdfdKXxqEL3Ea+bOMD/87X4lftiJkkaBiuG6ALQy1SLmEd7BSmVCuwCQsBrCamgBoLyfFDD1EPg==}
     engines: {node: '>=6.0.0'}
@@ -791,6 +806,15 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  use-isomorphic-layout-effect@1.2.1:
+    resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   use-sync-external-store@1.6.0:
     resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
     peerDependencies:
@@ -823,6 +847,9 @@ packages:
         optional: true
       terser:
         optional: true
+
+  xstate@5.32.5:
+    resolution: {integrity: sha512-ULazi1oe6wGrXl0Frb6otSlkm5HLifbbVTkMk5kkSKqz4TkxJaVpnl6jOJwKeid3ORPxYyZQgNLUSYX9q65SIA==}
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -1166,6 +1193,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@xstate/react@6.1.0(@types/react@18.2.64)(react@18.2.0)(xstate@5.32.5)':
+    dependencies:
+      react: 18.2.0
+      use-isomorphic-layout-effect: 1.2.1(@types/react@18.2.64)(react@18.2.0)
+      use-sync-external-store: 1.6.0(react@18.2.0)
+    optionalDependencies:
+      xstate: 5.32.5
+    transitivePeerDependencies:
+      - '@types/react'
+
   baseline-browser-mapping@2.10.32: {}
 
   browserslist@4.28.2:
@@ -1350,6 +1387,12 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
+  use-isomorphic-layout-effect@1.2.1(@types/react@18.2.64)(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+    optionalDependencies:
+      '@types/react': 18.2.64
+
   use-sync-external-store@1.6.0(react@18.2.0):
     dependencies:
       react: 18.2.0
@@ -1361,5 +1404,7 @@ snapshots:
       rollup: 4.60.4
     optionalDependencies:
       fsevents: 2.3.3
+
+  xstate@5.32.5: {}
 
   yallist@3.1.1: {}

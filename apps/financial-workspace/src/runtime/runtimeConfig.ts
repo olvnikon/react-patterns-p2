@@ -2,7 +2,8 @@ export type AnalyticsStrategyName = 'direct' | 'worker';
 export type BootstrapProfile =
   | 'standard'
   | 'slow-startup'
-  | 'optional-failure';
+  | 'optional-failure'
+  | 'critical-failure';
 export type ContextProviderName = 'mock' | 'shell' | 'fdc3';
 export type PrefetchMode = 'none' | 'intent';
 

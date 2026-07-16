@@ -262,6 +262,27 @@ select {
   background: #dff1e5;
 }
 
+.status-chip--idle {
+  color: #4f5b68;
+  background: #e8ecf1;
+}
+
+.status-chip--running,
+.status-chip--main-ready {
+  color: #5a4310;
+  background: #fff0c2;
+}
+
+.status-chip--degraded {
+  color: #744a12;
+  background: #fce0ae;
+}
+
+.status-chip--failed {
+  color: #7a2525;
+  background: #f7d4d4;
+}
+
 .wiring-list {
   display: grid;
   gap: 0;
@@ -314,6 +335,130 @@ select {
   border-radius: 8px;
   background: #ffffff;
   cursor: pointer;
+}
+
+.bootstrap-section {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.bootstrap-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bootstrap-heading h2 {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+}
+
+.bootstrap-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.bootstrap-controls > span {
+  margin-right: 4px;
+  color: #5d6876;
+  font-weight: 700;
+}
+
+.bootstrap-controls small {
+  flex-basis: 100%;
+  color: #667085;
+}
+
+.bootstrap-controls button,
+.bootstrap-task button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #b7c3d0;
+  border-radius: 7px;
+  color: #1c2430;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.bootstrap-controls button[aria-pressed="true"] {
+  border-color: #91c8a5;
+  color: #193d2a;
+  background: #e8f5ed;
+}
+
+.bootstrap-graph {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bootstrap-task {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #d8dee6;
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.bootstrap-task--idle {
+  border-left-color: #aab3bf;
+}
+
+.bootstrap-task--running {
+  border-left-color: #d7a936;
+}
+
+.bootstrap-task--ready {
+  border-left-color: #68a77f;
+}
+
+.bootstrap-task--failed {
+  border-left-color: #c76868;
+}
+
+.bootstrap-task__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bootstrap-task p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.bootstrap-task__metadata {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bootstrap-task__metadata span {
+  padding: 3px 6px;
+  border-radius: 5px;
+  color: #4f5b68;
+  background: #eef1f4;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.bootstrap-task__dependencies {
+  color: #667085;
 }
 
 .placeholder-list {
@@ -419,6 +564,7 @@ select {
   }
 
   .summary-grid,
+  .bootstrap-graph,
   .diagnostics-grid,
   .workspace-grid,
   .workspace-layout {

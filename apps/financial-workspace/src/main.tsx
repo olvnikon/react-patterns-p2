@@ -20,6 +20,7 @@ async function startApplication() {
     const runtimeConfig = createRuntimeConfig(resources);
     const application = createApplication(runtimeConfig);
 
+    await application.start();
     application.mount(applicationRoot);
   } catch (error) {
     ReactDOM.createRoot(applicationRoot).render(
