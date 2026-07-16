@@ -7,11 +7,13 @@ import {
 
 import type { ApplicationDiagnostics } from '../composition/applicationTypes';
 import type { PortfolioAnalytics } from '@demo/feature-analytics-lab';
+import type { OrderTicketLogic } from '@demo/feature-workflow-lab';
 import { AnalyticsRoute } from '../routes/AnalyticsRoute';
 import { DashboardRoute } from '../routes/DashboardRoute';
 import { OrderApprovalRoute } from '../routes/OrderApprovalRoute';
 import { OrdersRoute } from '../routes/OrdersRoute';
 import { StartupRoute } from '../routes/StartupRoute';
+import { WorkflowsRoute } from '../routes/WorkflowsRoute';
 import type { AppStore } from './store/configureAppStore';
 
 function RootLayout() {
@@ -29,6 +31,7 @@ function RootLayout() {
           <NavLink to="/reports">Reports</NavLink>
           <NavLink to="/startup">Part 2</NavLink>
           <NavLink to="/analytics">Analytics</NavLink>
+          <NavLink to="/workflows">Workflows</NavLink>
         </nav>
       }
     >
@@ -51,12 +54,14 @@ type CreateRouterInput = {
   store: AppStore;
   diagnostics: ApplicationDiagnostics;
   analytics: PortfolioAnalytics;
+  orderTicketLogic: OrderTicketLogic;
 };
 
 export function createAppRouter({
   store,
   diagnostics,
   analytics,
+  orderTicketLogic,
 }: CreateRouterInput) {
   return createBrowserRouter([
     {
@@ -95,6 +100,10 @@ export function createAppRouter({
         {
           path: 'analytics',
           element: <AnalyticsRoute analytics={analytics} />,
+        },
+        {
+          path: 'workflows',
+          element: <WorkflowsRoute orderTicketLogic={orderTicketLogic} />,
         },
       ],
     },

@@ -2098,25 +2098,25 @@ A critical workflow state such as `outcomeUnknown` must not be hidden as generic
 
 ## 19. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
 packages/feature-workflow-lab/
   src/
-    domain.ts
-    services.ts
-    orderTicketMachine.ts
-    createOrderTicketController.ts
-    createFakeOrderWorkflowServices.ts
-    OrderTicketDemo.tsx
-    projections.ts
+    model/
+      orderTicketTypes.ts
+      createMockOrderTicketServices.ts
+      createOrderTicketMachine.ts
+    react/
+      useOrderTicket.ts
+    OrderTicketEntry.tsx
     index.ts
 
 apps/financial-workspace/src/routes/
   WorkflowsRoute.tsx
 
 apps/financial-workspace/src/composition/
-  createApplicationDependencies.ts
+  createApplication.ts
 ```
 
 Primary visible demo:
@@ -2125,13 +2125,13 @@ Primary visible demo:
 /workflows
 ```
 
-One-ticket mode demonstrates this pattern.
+The current one-ticket mode demonstrates this pattern. Multi-ticket mode will
+be added in the Actor Model phase.
 
-Multi-ticket mode demonstrates the Actor Model.
+Implementation status:
 
-Status during documentation phase:
-
-> Planned. Source paths become definitive after Phase 5 implementation.
+> Implemented. `/workflows` demonstrates accepted, blocked, definite-failure,
+> outcome-unknown, successful-reconciliation, and not-found paths.
 
 ---
 

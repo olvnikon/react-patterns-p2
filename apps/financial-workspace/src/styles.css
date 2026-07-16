@@ -590,6 +590,56 @@ select {
   font-weight: 700;
 }
 
+.workflow-state-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.workflow-state {
+  padding: 7px 9px;
+  border: 1px solid #d8dee6;
+  border-radius: 7px;
+  color: #667085;
+  background: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.workflow-state--active {
+  color: #193d2a;
+  border-color: #68a77f;
+  background: #e8f5ed;
+}
+
+.workflow-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.workflow-diagnostics {
+  align-content: start;
+}
+
+.workflow-warning {
+  padding: 12px;
+  border-left: 4px solid #d7a936;
+  border-radius: 6px;
+  color: #5a4310 !important;
+  background: #fff7dc;
+}
+
+.workflow-success {
+  padding: 12px;
+  border-left: 4px solid #68a77f;
+  border-radius: 6px;
+  color: #193d2a !important;
+  background: #e8f5ed;
+  font-weight: 700;
+}
+
 .placeholder-list {
   display: grid;
   gap: 10px;
@@ -696,6 +746,7 @@ select {
   .analytics-layout,
   .bootstrap-graph,
   .diagnostics-grid,
+  .workflow-layout,
   .workspace-grid,
   .workspace-layout {
     grid-template-columns: 1fr;

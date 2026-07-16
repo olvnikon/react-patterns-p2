@@ -19,6 +19,7 @@
     "@demo/feature-reports": "workspace:*",
     "@demo/feature-risk-summary": "workspace:*",
     "@demo/feature-workspace-status": "workspace:*",
+    "@demo/feature-workflow-lab": "workspace:*",
     "@demo/shared-api": "workspace:*",
     "@demo/shared-formatting": "workspace:*",
     "@demo/shared-types": "workspace:*",

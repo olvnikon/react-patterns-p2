@@ -1,0 +1,19 @@
+{
+  "name": "@demo/feature-workflow-lab",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@xstate/react": "^6.1.0",
+    "xstate": "^5.32.5"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0"
+  }
+}

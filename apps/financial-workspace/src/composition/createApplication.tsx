@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import {
   createPortfolioAnalytics,
 } from '@demo/feature-analytics-lab';
+import {
+  createMockOrderTicketServices,
+  createOrderTicketMachine,
+} from '@demo/feature-workflow-lab';
 
 import { App } from '../app/App';
 import { createAppRouter } from '../app/routes';
@@ -24,6 +28,8 @@ export function createApplication(
   const store = configureAppStore(dependencies);
   const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
   const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
+  const orderTicketServices = createMockOrderTicketServices();
+  const orderTicketLogic = createOrderTicketMachine(orderTicketServices);
 
   const diagnostics: ApplicationDiagnostics = Object.freeze({
     runtimeConfig,
@@ -58,6 +64,11 @@ export function createApplication(
         lifetime: 'application',
       },
       {
+        capability: 'Order ticket workflow',
+        implementation: 'XState orderTicket machine',
+        lifetime: 'feature',
+      },
+      {
         capability: 'Reports reducer',
         implementation: 'Lazy injectReducer wiring',
         lifetime: 'route',
@@ -69,6 +80,7 @@ export function createApplication(
     store,
     diagnostics,
     analytics,
+    orderTicketLogic,
   });
 
   let reactRoot: ReactDOM.Root | undefined;

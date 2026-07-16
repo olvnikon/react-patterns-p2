@@ -28,6 +28,7 @@ Routes:
 | `/reports` | Lazy route with dynamically injected Reports reducer |
 | `/startup` | Part 2 foundation: Runtime Configuration and Composition Root diagnostics |
 | `/analytics` | Runtime-selected Strategy and Web Worker Offloading demo |
+| `/workflows` | Explicit order-ticket State Machine and Statechart demo |
 
 ## Part 2 Foundation
 
@@ -85,6 +86,30 @@ Strategy intentionally performs it on the browser main thread. The Worker
 Strategy uses a typed native module Worker with progress, cancellation,
 request IDs, and cleanup. The calculation is an artificial workload for
 architecture demonstration only; it is not a real financial or risk formula.
+
+## State Machines and Statecharts
+
+The `/workflows` route demonstrates one fake order-ticket workflow:
+
+```txt
+editing
+  → checking
+  → confirming
+  → submitting
+  → accepted
+
+checking → blocked
+submitting → definite failure
+submitting → outcome unknown → reconciling
+```
+
+The machine owns guards, asynchronous checks, submission timeout,
+idempotency-key reuse, and reconciliation. React consumes a feature adapter
+that exposes view-ready `state` and business-friendly `api` operations.
+
+The timeout path deliberately distinguishes an unknown browser outcome from a
+confirmed rejection. All checks, decisions, orders, and repositories remain
+fake and local.
 
 ## Pattern Map
 

@@ -33,6 +33,9 @@
       "@demo/feature-workspace-status": [
         "packages/feature-workspace-status/src/index.ts"
       ],
+      "@demo/feature-workflow-lab": [
+        "packages/feature-workflow-lab/src/index.ts"
+      ],
       "@demo/feature-portfolio-summary": [
         "packages/feature-portfolio-summary/src/index.ts"
       ],

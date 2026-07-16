@@ -41,6 +41,9 @@ importers:
       '@demo/feature-risk-summary':
         specifier: workspace:*
         version: link:../../packages/feature-risk-summary
+      '@demo/feature-workflow-lab':
+        specifier: workspace:*
+        version: link:../../packages/feature-workflow-lab
       '@demo/feature-workspace-status':
         specifier: workspace:*
         version: link:../../packages/feature-workspace-status
@@ -186,6 +189,18 @@ importers:
       react:
         specifier: '>=18.2.0'
         version: 18.2.0
+
+  packages/feature-workflow-lab:
+    dependencies:
+      '@xstate/react':
+        specifier: ^6.1.0
+        version: 6.1.0(@types/react@18.2.64)(react@18.2.0)(xstate@5.32.5)
+      react:
+        specifier: '>=18.2.0'
+        version: 18.2.0
+      xstate:
+        specifier: ^5.32.5
+        version: 5.32.5
 
   packages/feature-workspace-status:
     dependencies:
