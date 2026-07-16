@@ -4,10 +4,55 @@
 
 The full walkthrough should take roughly 20–30 minutes. Each stop should explain one primary distinction rather than every implementation detail.
 
+## Package and ownership map
+
+The route is the visible demonstration. The files below contain the actual
+pattern.
+
+| Ownership boundary | Patterns demonstrated | Package or directory |
+| --- | --- | --- |
+| Application startup | Runtime Configuration, Composition Root, Bootstrap Task Graph | [`apps/financial-workspace/src`](../../apps/financial-workspace/src) |
+| Analytics capability | Strategy Pattern, Web Worker Offloading | [`packages/feature-analytics-lab`](../../packages/feature-analytics-lab) |
+| Workflow capability | State Machines and Statecharts, Actor Model | [`packages/feature-workflow-lab`](../../packages/feature-workflow-lab) |
+| Dynamic panel capability | Graceful Capability Degradation, panel-level intent loading | [`packages/feature-dynamic-panels`](../../packages/feature-dynamic-panels) |
+| Application loading policy | Import on Interaction / Intent-Based Prefetching | [`apps/financial-workspace/src/prefetch`](../../apps/financial-workspace/src/prefetch), route loaders, and panel loaders |
+
+The three feature packages expose deliberate public APIs through their
+`src/index.ts` files:
+
+- [`feature-analytics-lab/src/index.ts`](../../packages/feature-analytics-lab/src/index.ts)
+- [`feature-workflow-lab/src/index.ts`](../../packages/feature-workflow-lab/src/index.ts)
+- [`feature-dynamic-panels/src/index.ts`](../../packages/feature-dynamic-panels/src/index.ts)
+
+This is worth showing briefly: routes import package roots, while each package
+keeps its implementation details private.
+
+## Quick pattern-to-source map
+
+| Pattern or practice | Route | Open first | Supporting files |
+| --- | --- | --- | --- |
+| Runtime Configuration | `/startup` | [`resources.json`](../../apps/financial-workspace/public/resources.json), [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts) | [`loadResources.ts`](../../apps/financial-workspace/src/runtime/loadResources.ts), [`runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
+| Composition Root | `/startup` | [`createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx) | [`applicationTypes.ts`](../../apps/financial-workspace/src/composition/applicationTypes.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
+| Strategy Pattern | `/analytics` | [`analyticsTypes.ts`](../../packages/feature-analytics-lab/src/model/analyticsTypes.ts), [`createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts) | [`directAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/directAnalyticsStrategy.ts), [`workerAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/workerAnalyticsStrategy.ts) |
+| State Machines and Statecharts | `/workflows` | [`createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts) | [`createMockOrderTicketServices.ts`](../../packages/feature-workflow-lab/src/model/createMockOrderTicketServices.ts), [`useOrderTicket.ts`](../../packages/feature-workflow-lab/src/react/useOrderTicket.ts), [`OrderTicketEntry.tsx`](../../packages/feature-workflow-lab/src/OrderTicketEntry.tsx) |
+| Actor Model | `/workflows` | [`createWorkflowWorkspaceMachine.ts`](../../packages/feature-workflow-lab/src/model/createWorkflowWorkspaceMachine.ts) | [`externalContextSource.ts`](../../packages/feature-workflow-lab/src/model/externalContextSource.ts), [`WorkflowWorkspaceEntry.tsx`](../../packages/feature-workflow-lab/src/WorkflowWorkspaceEntry.tsx) |
+| Declarative Bootstrap Task Graph | `/startup` | [`bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts), [`createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts) | [`createBootstrapRuntime.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapRuntime.ts), [`StartupRoute.tsx`](../../apps/financial-workspace/src/routes/StartupRoute.tsx) |
+| Web Worker Offloading | `/analytics` | [`createWorkerScenarioClient.ts`](../../packages/feature-analytics-lab/src/worker/createWorkerScenarioClient.ts), [`scenario.worker.ts`](../../packages/feature-analytics-lab/src/worker/scenario.worker.ts) | [`workerProtocol.ts`](../../packages/feature-analytics-lab/src/worker/workerProtocol.ts), [`calculateScenario.ts`](../../packages/feature-analytics-lab/src/model/calculateScenario.ts), [`AnalyticsEntry.tsx`](../../packages/feature-analytics-lab/src/AnalyticsEntry.tsx) |
+| Intent-Based Prefetching | Navigation, `/startup`, `/panels` | [`createPreloadRegistry.ts`](../../apps/financial-workspace/src/prefetch/createPreloadRegistry.ts), [`createIntentHandlers.ts`](../../apps/financial-workspace/src/prefetch/createIntentHandlers.ts) | [`routeModules.ts`](../../apps/financial-workspace/src/routes/routeModules.ts), [`routes.tsx`](../../apps/financial-workspace/src/app/routes.tsx), [`panelLoaders.ts`](../../packages/feature-dynamic-panels/src/model/panelLoaders.ts) |
+| Graceful Capability Degradation | `/panels` | [`DynamicPanelHost.tsx`](../../packages/feature-dynamic-panels/src/internal/DynamicPanelHost.tsx), [`PanelErrorBoundary.tsx`](../../packages/feature-dynamic-panels/src/internal/PanelErrorBoundary.tsx) | [`panelDefinitions.ts`](../../packages/feature-dynamic-panels/src/model/panelDefinitions.ts), [`DynamicPanelsEntry.tsx`](../../packages/feature-dynamic-panels/src/DynamicPanelsEntry.tsx), [`panels/`](../../packages/feature-dynamic-panels/src/panels) |
+
 ## 1. Start the application
 
 Open `/architecture`, introduce the nine responsibilities, and then continue to
 `/startup`.
+
+Open these files:
+
+1. [`public/resources.json`](../../apps/financial-workspace/public/resources.json)
+2. [`runtime/createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts)
+3. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
+4. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
+5. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
 
 Show:
 
@@ -27,6 +72,19 @@ Trigger one optional bootstrap failure and retry it. If demonstrating a critical
 
 Open `/analytics`.
 
+Package:
+
+```text
+@demo/feature-analytics-lab
+```
+
+Open these files:
+
+1. [`model/analyticsTypes.ts`](../../packages/feature-analytics-lab/src/model/analyticsTypes.ts) — stable capability contract.
+2. [`model/createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts) — Strategy selection.
+3. [`model/directAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/directAnalyticsStrategy.ts) and [`model/workerAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/workerAnalyticsStrategy.ts) — interchangeable implementations.
+4. [`worker/createWorkerScenarioClient.ts`](../../packages/feature-analytics-lab/src/worker/createWorkerScenarioClient.ts) and [`worker/scenario.worker.ts`](../../packages/feature-analytics-lab/src/worker/scenario.worker.ts) — off-thread implementation.
+
 Show:
 
 - the stable `PortfolioAnalytics` capability;
@@ -45,6 +103,19 @@ Cancel one calculation and start a new one to show stale-result protection.
 ## 3. Run one explicit workflow
 
 Open `/workflows` in single-ticket mode.
+
+Package:
+
+```text
+@demo/feature-workflow-lab
+```
+
+Open these files:
+
+1. [`model/createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts) — states, guards, invoked actors, timeout, and reconciliation.
+2. [`model/createMockOrderTicketServices.ts`](../../packages/feature-workflow-lab/src/model/createMockOrderTicketServices.ts) — fake async boundary.
+3. [`react/useOrderTicket.ts`](../../packages/feature-workflow-lab/src/react/useOrderTicket.ts) — React adapter.
+4. [`OrderTicketEntry.tsx`](../../packages/feature-workflow-lab/src/OrderTicketEntry.tsx) — rendering and event sending.
 
 Move through:
 
@@ -75,6 +146,12 @@ All behavior remains fake and local.
 
 Switch `/workflows` to multi-ticket mode.
 
+Keep the same package open, then show:
+
+1. [`model/createWorkflowWorkspaceMachine.ts`](../../packages/feature-workflow-lab/src/model/createWorkflowWorkspaceMachine.ts) — spawn, stop, targeted messages, broadcast commands, and child facts.
+2. [`model/externalContextSource.ts`](../../packages/feature-workflow-lab/src/model/externalContextSource.ts) — external event adapter boundary.
+3. [`WorkflowWorkspaceEntry.tsx`](../../packages/feature-workflow-lab/src/WorkflowWorkspaceEntry.tsx) — fine-grained actor rendering.
+
 Show:
 
 - three independent ticket actors;
@@ -94,6 +171,14 @@ Point out that these actors normally execute on the main browser thread.
 
 Return to navigation or the panel catalogue.
 
+Open these files:
+
+1. [`prefetch/createPreloadRegistry.ts`](../../apps/financial-workspace/src/prefetch/createPreloadRegistry.ts) — promise cache, deduplication, status, and retry.
+2. [`prefetch/createIntentHandlers.ts`](../../apps/financial-workspace/src/prefetch/createIntentHandlers.ts) — hover/focus policy and reduced-data check.
+3. [`routes/routeModules.ts`](../../apps/financial-workspace/src/routes/routeModules.ts) — cached route imports shared by prefetch and activation.
+4. [`app/routes.tsx`](../../apps/financial-workspace/src/app/routes.tsx) — intent-aware navigation and lazy route activation.
+5. [`feature-dynamic-panels/model/panelLoaders.ts`](../../packages/feature-dynamic-panels/src/model/panelLoaders.ts) — the same approach at panel level.
+
 Show:
 
 - a lazy item in `idle`;
@@ -109,6 +194,20 @@ Say:
 ## 6. Demonstrate local degradation
 
 Open `/panels`.
+
+Package:
+
+```text
+@demo/feature-dynamic-panels
+```
+
+Open these files:
+
+1. [`model/panelDefinitions.ts`](../../packages/feature-dynamic-panels/src/model/panelDefinitions.ts) — panel contract, loader, and config validation.
+2. [`internal/DynamicPanelHost.tsx`](../../packages/feature-dynamic-panels/src/internal/DynamicPanelHost.tsx) — validation, Suspense, disabled state, and boundary ownership.
+3. [`internal/PanelErrorBoundary.tsx`](../../packages/feature-dynamic-panels/src/internal/PanelErrorBoundary.tsx) — local rendering failure and recovery UI.
+4. [`panels/ActivitySummaryPanel.tsx`](../../packages/feature-dynamic-panels/src/panels/ActivitySummaryPanel.tsx) — ready, stale, and query-failure states.
+5. [`panels/ScenarioSummaryPanel.tsx`](../../packages/feature-dynamic-panels/src/panels/ScenarioSummaryPanel.tsx) — ready, degraded, disabled, and render-failure examples.
 
 Show:
 
@@ -138,3 +237,17 @@ Workers offload
 Intent Prefetching anticipates
 Graceful Degradation contains
 ```
+
+## Minimal code-tour version
+
+If presentation time is tight, open only these nine files:
+
+1. [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts)
+2. [`createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
+3. [`createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts)
+4. [`createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts)
+5. [`createWorkflowWorkspaceMachine.ts`](../../packages/feature-workflow-lab/src/model/createWorkflowWorkspaceMachine.ts)
+6. [`createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
+7. [`createWorkerScenarioClient.ts`](../../packages/feature-analytics-lab/src/worker/createWorkerScenarioClient.ts)
+8. [`createPreloadRegistry.ts`](../../apps/financial-workspace/src/prefetch/createPreloadRegistry.ts)
+9. [`DynamicPanelHost.tsx`](../../packages/feature-dynamic-panels/src/internal/DynamicPanelHost.tsx)

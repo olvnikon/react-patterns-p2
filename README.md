@@ -420,6 +420,10 @@ Reducer injection does not automatically clear route state. This demo keeps Repo
 
 ## Demo Walkthrough
 
+The detailed [Part 2 live demo walkthrough](docs/architecture/demo-walkthrough.md)
+includes the package ownership map, exact files to open for every pattern, and
+a minimal nine-file code tour.
+
 1. Start at `/architecture`.
    Use the nine cards to introduce the boundaries: configuration chooses,
    composition wires, strategy varies, statecharts constrain, actors
