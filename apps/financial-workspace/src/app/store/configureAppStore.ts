@@ -7,46 +7,64 @@ import {
 import { createEpicMiddleware } from 'redux-observable';
 
 import {
-  createAppDependencies,
   type AppDependencies,
 } from './appDependencies';
 import { createReducer, type AppReducerState } from './createReducer';
 import { rootEpic } from './rootEpic';
 
-const epicMiddleware = createEpicMiddleware<
-  UnknownAction,
-  UnknownAction,
-  AppReducerState,
-  AppDependencies
->({
-  dependencies: createAppDependencies(),
-});
+type ConfiguredStore = ReturnType<typeof createConfiguredStore>;
 
-const store = configureStore({
-  reducer: createReducer(),
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(epicMiddleware),
-});
-
-export type AppStore = typeof store & {
+export type AppStore = ConfiguredStore & {
   asyncReducers: ReducersMapObject;
   injectReducer: (key: string, reducer: Reducer) => void;
 };
 
-export const appStore = store as AppStore;
+function createConfiguredStore(
+  epicMiddleware: ReturnType<
+    typeof createEpicMiddleware<
+      UnknownAction,
+      UnknownAction,
+      AppReducerState,
+      AppDependencies
+    >
+  >,
+) {
+  return configureStore({
+    reducer: createReducer(),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(epicMiddleware),
+  });
+}
 
-appStore.asyncReducers = {};
+export function configureAppStore(
+  dependencies: AppDependencies,
+): AppStore {
+  const epicMiddleware = createEpicMiddleware<
+    UnknownAction,
+    UnknownAction,
+    AppReducerState,
+    AppDependencies
+  >({
+    dependencies,
+  });
 
-appStore.injectReducer = (key, reducer) => {
-  if (appStore.asyncReducers[key]) {
-    return;
-  }
+  const appStore = createConfiguredStore(epicMiddleware) as AppStore;
 
-  appStore.asyncReducers[key] = reducer;
-  appStore.replaceReducer(createReducer(appStore.asyncReducers));
-};
+  appStore.asyncReducers = {};
 
-epicMiddleware.run(rootEpic);
+  appStore.injectReducer = (key, reducer) => {
+    if (appStore.asyncReducers[key]) {
+      return;
+    }
 
-export type RootState = ReturnType<typeof appStore.getState>;
-export type AppDispatch = typeof appStore.dispatch;
+    appStore.asyncReducers[key] = reducer;
+    appStore.replaceReducer(createReducer(appStore.asyncReducers));
+  };
+
+  epicMiddleware.run(rootEpic);
+
+  return appStore;
+}
+
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

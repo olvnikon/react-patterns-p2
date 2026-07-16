@@ -219,6 +219,103 @@ select {
   font-weight: 700;
 }
 
+.startup-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #bad7c6;
+  border-radius: 8px;
+  background: #edf8f1;
+  color: #244a35;
+  font-weight: 700;
+}
+
+.startup-flow span:nth-child(odd) {
+  padding: 8px 10px;
+  border: 1px solid #91c8a5;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.diagnostics-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 16px;
+}
+
+.status-chip {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status-chip--ready {
+  color: #193d2a;
+  background: #dff1e5;
+}
+
+.wiring-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wiring-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #e3e8ee;
+}
+
+.wiring-list li div {
+  display: grid;
+  justify-content: initial;
+  gap: 3px;
+}
+
+.wiring-list li span:not(.pattern-tag) {
+  color: #5d6876;
+  font-size: 0.875rem;
+}
+
+.startup-failure {
+  width: min(680px, 100%);
+  margin: 10vh auto 0;
+  padding: 24px;
+}
+
+.startup-failure .workspace-panel {
+  gap: 16px;
+  border-color: #e4b8b8;
+}
+
+.startup-failure h1,
+.startup-failure p {
+  margin: 0;
+}
+
+.startup-failure button {
+  width: fit-content;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #b7c3d0;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
 .placeholder-list {
   display: grid;
   gap: 10px;
@@ -322,6 +419,7 @@ select {
   }
 
   .summary-grid,
+  .diagnostics-grid,
   .workspace-grid,
   .workspace-layout {
     grid-template-columns: 1fr;

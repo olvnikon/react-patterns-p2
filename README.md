@@ -26,6 +26,36 @@ Routes:
 | `/orders` | Flat application composition with slot-based layout |
 | `/orders/:orderId/approval` | Order Approval workflow with React Adapter and epics |
 | `/reports` | Lazy route with dynamically injected Reports reducer |
+| `/startup` | Part 2 foundation: Runtime Configuration and Composition Root diagnostics |
+
+## Part 2 Foundation
+
+Part 2 extends the same client-side JAMstack SPA. The browser now starts through:
+
+```txt
+resources.json
+  → validated immutable RuntimeConfig
+  → Composition Root
+  → dependencies, store, router, and React application
+```
+
+`apps/financial-workspace/public/resources.json` contains a small `customData`
+collection. Application startup maps and validates those string values before
+creating any feature infrastructure. Invalid configuration renders a dedicated
+startup failure screen instead of mounting partially configured features.
+
+The Composition Root lives under:
+
+```txt
+apps/financial-workspace/src/composition/
+```
+
+It creates the existing mock epic dependencies, Redux store, router, and React
+application runtime. The `/startup` route makes the validated choices and
+concrete wiring visible for the presentation.
+
+No backend application is part of this repository. All repository
+implementations remain fake, local, and mocked.
 
 ## Pattern Map
 

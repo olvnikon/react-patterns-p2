@@ -5,9 +5,12 @@ import {
   createBrowserRouter,
 } from 'react-router-dom';
 
+import type { ApplicationDiagnostics } from '../composition/applicationTypes';
 import { DashboardRoute } from '../routes/DashboardRoute';
 import { OrderApprovalRoute } from '../routes/OrderApprovalRoute';
 import { OrdersRoute } from '../routes/OrdersRoute';
+import { StartupRoute } from '../routes/StartupRoute';
+import type { AppStore } from './store/configureAppStore';
 
 function RootLayout() {
   return (
@@ -22,6 +25,7 @@ function RootLayout() {
           <NavLink to="/orders">Orders</NavLink>
           <NavLink to="/orders/ORD-1001/approval">Approval</NavLink>
           <NavLink to="/reports">Reports</NavLink>
+          <NavLink to="/startup">Part 2</NavLink>
         </nav>
       }
     >
@@ -40,36 +44,50 @@ function NotFoundRoute() {
   );
 }
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootLayout />,
-    errorElement: <NotFoundRoute />,
-    children: [
-      {
-        index: true,
-        element: <DashboardRoute />,
-      },
-      {
-        path: 'orders',
-        element: <OrdersRoute />,
-      },
-      {
-        path: 'orders/:orderId/approval',
-        element: <OrderApprovalRoute />,
-      },
-      {
-        path: 'reports',
-        lazy: async () => {
-          const reportsRoute = await import('../routes/ReportsRoute');
+type CreateRouterInput = {
+  store: AppStore;
+  diagnostics: ApplicationDiagnostics;
+};
 
-          reportsRoute.injectReportsReducer();
-
-          return {
-            Component: reportsRoute.ReportsRoute,
-          };
+export function createAppRouter({
+  store,
+  diagnostics,
+}: CreateRouterInput) {
+  return createBrowserRouter([
+    {
+      path: '/',
+      element: <RootLayout />,
+      errorElement: <NotFoundRoute />,
+      children: [
+        {
+          index: true,
+          element: <DashboardRoute />,
         },
-      },
-    ],
-  },
-]);
+        {
+          path: 'orders',
+          element: <OrdersRoute />,
+        },
+        {
+          path: 'orders/:orderId/approval',
+          element: <OrderApprovalRoute />,
+        },
+        {
+          path: 'reports',
+          lazy: async () => {
+            const reportsRoute = await import('../routes/ReportsRoute');
+
+            reportsRoute.injectReportsReducer(store);
+
+            return {
+              Component: reportsRoute.ReportsRoute,
+            };
+          },
+        },
+        {
+          path: 'startup',
+          element: <StartupRoute diagnostics={diagnostics} />,
+        },
+      ],
+    },
+  ]);
+}

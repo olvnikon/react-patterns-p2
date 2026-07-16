@@ -4,10 +4,10 @@ import {
   reportsReducerKey,
 } from '@demo/feature-reports';
 
-import { appStore } from '../app/store/configureAppStore';
+import type { AppStore } from '../app/store/configureAppStore';
 
-export function injectReportsReducer() {
-  appStore.injectReducer(reportsReducerKey, reportsReducer);
+export function injectReportsReducer(store: AppStore) {
+  store.injectReducer(reportsReducerKey, reportsReducer);
 }
 
 export function ReportsRoute() {

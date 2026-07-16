@@ -1,11 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { App } from './app/App';
+import { createApplication } from './composition';
+import { createRuntimeConfig, loadResources } from './runtime';
+import { StartupFailure } from './StartupFailure';
 import './styles.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('The application root element is missing.');
+}
+
+const applicationRoot = rootElement;
+
+async function startApplication() {
+  try {
+    const resources = await loadResources();
+    const runtimeConfig = createRuntimeConfig(resources);
+    const application = createApplication(runtimeConfig);
+
+    application.mount(applicationRoot);
+  } catch (error) {
+    ReactDOM.createRoot(applicationRoot).render(
+      <React.StrictMode>
+        <StartupFailure error={error} />
+      </React.StrictMode>,
+    );
+  }
+}
+
+void startApplication();

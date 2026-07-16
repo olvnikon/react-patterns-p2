@@ -1,12 +1,19 @@
 import { Provider } from 'react-redux';
-import { RouterProvider } from 'react-router-dom';
+import {
+  RouterProvider,
+  type RouterProviderProps,
+} from 'react-router-dom';
 
-import { router } from './routes';
-import { appStore } from './store/configureAppStore';
+import type { AppStore } from './store/configureAppStore';
 
-export function App() {
+type AppProps = {
+  store: AppStore;
+  router: RouterProviderProps['router'];
+};
+
+export function App({ store, router }: AppProps) {
   return (
-    <Provider store={appStore}>
+    <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
   );
