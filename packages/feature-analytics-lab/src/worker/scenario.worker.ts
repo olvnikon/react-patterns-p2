@@ -4,10 +4,7 @@ import {
   createScenarioAccumulator,
 } from '../model/calculateScenario';
 import type { ScenarioInput } from '../model/analyticsTypes';
-import type {
-  WorkerRequest,
-  WorkerResponse,
-} from './workerProtocol';
+import type { WorkerRequest, WorkerResponse } from './workerProtocol';
 
 type WorkerScope = {
   onmessage: ((event: MessageEvent<WorkerRequest>) => void) | null;
@@ -16,12 +13,6 @@ type WorkerScope = {
 
 const workerScope = self as unknown as WorkerScope;
 const cancelledRequests = new Set<string>();
-
-function yieldToWorkerQueue(): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, 0);
-  });
-}
 
 async function runScenario(
   requestId: string,
@@ -44,10 +35,7 @@ async function runScenario(
         return;
       }
 
-      const endIndex = Math.min(
-        startIndex + chunkSize,
-        input.positionCount,
-      );
+      const endIndex = Math.min(startIndex + chunkSize, input.positionCount);
 
       calculateScenarioRange(input, startIndex, endIndex, accumulator);
 
@@ -60,9 +48,6 @@ async function runScenario(
           percent: Math.round((endIndex / input.positionCount) * 100),
         },
       });
-
-      // Yield between chunks so cancellation messages can enter the mailbox.
-      await yieldToWorkerQueue();
     }
 
     workerScope.postMessage({

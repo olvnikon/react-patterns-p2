@@ -1,8 +1,4 @@
-import {
-  createActor,
-  type ActorRefFrom,
-  type Subscription,
-} from 'xstate';
+import { createActor, type ActorRefFrom, type Subscription } from 'xstate';
 
 import type { BootstrapProfile } from '../runtime';
 import { createBootstrapMachine } from './createBootstrapMachine';
@@ -17,9 +13,7 @@ import type {
 type BootstrapMachine = ReturnType<typeof createBootstrapMachine>;
 type BootstrapActor = ActorRefFrom<BootstrapMachine>;
 
-function projectSnapshot(
-  actor: BootstrapActor,
-): BootstrapSnapshot {
+function projectSnapshot(actor: BootstrapActor): BootstrapSnapshot {
   // Project the actor tree into one presenter-friendly readiness model.
   const actorSnapshot = actor.getSnapshot();
   const tasks = Object.values(actorSnapshot.context.tasks);
@@ -55,6 +49,7 @@ function projectSnapshot(
   };
 }
 
+// This is needed for the demo to be able to replay the bootstrap process with a different profile
 export function createBootstrapRuntime(
   initialProfile: BootstrapProfile,
   operations: BootstrapOperations,
