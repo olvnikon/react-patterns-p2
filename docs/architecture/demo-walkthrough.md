@@ -31,7 +31,7 @@ keeps its implementation details private.
 
 | Pattern or practice | Route | Open first | Supporting files |
 | --- | --- | --- | --- |
-| Runtime Configuration | `/startup` | [`resources.json`](../../apps/financial-workspace/public/resources.json), [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts) | [`loadResources.ts`](../../apps/financial-workspace/src/runtime/loadResources.ts), [`runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
+| Runtime Configuration | `/startup` | [`resources.json`](../../apps/financial-workspace/public/resources.json), [`runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts) | [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts), [`loadResources.ts`](../../apps/financial-workspace/src/runtime/loadResources.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
 | Composition Root | `/startup` | [`createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx) | [`applicationTypes.ts`](../../apps/financial-workspace/src/composition/applicationTypes.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
 | Strategy Pattern | `/analytics` | [`analyticsTypes.ts`](../../packages/feature-analytics-lab/src/model/analyticsTypes.ts), [`createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts) | [`directAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/directAnalyticsStrategy.ts), [`workerAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/workerAnalyticsStrategy.ts) |
 | State Machines and Statecharts | `/workflows` | [`createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts) | [`createMockOrderTicketServices.ts`](../../packages/feature-workflow-lab/src/model/createMockOrderTicketServices.ts), [`useOrderTicket.ts`](../../packages/feature-workflow-lab/src/react/useOrderTicket.ts), [`OrderTicketEntry.tsx`](../../packages/feature-workflow-lab/src/OrderTicketEntry.tsx) |
@@ -49,15 +49,18 @@ Open `/architecture`, introduce the nine responsibilities, and then continue to
 Open these files:
 
 1. [`public/resources.json`](../../apps/financial-workspace/public/resources.json)
-2. [`runtime/createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts)
-3. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
-4. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
-5. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
+2. [`runtime/runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts)
+3. [`runtime/createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts)
+4. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
+5. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
+6. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
 
 Show:
 
 - values loaded from `resources.json`;
-- the Zod schema turning unknown JSON into a typed immutable config;
+- Zod schemas as the source of truth, with public types derived through
+  `z.infer`;
+- `createRuntimeConfig` turning unknown JSON into a typed immutable config;
 - bootstrap tasks running in parallel;
 - the Main View Ready marker;
 - Composition Root diagnostics.

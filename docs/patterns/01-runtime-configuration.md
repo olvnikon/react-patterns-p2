@@ -465,8 +465,10 @@ export function readEnum<const TValue extends string>(
 
 The running showcase implements this step declaratively with
 `resourceDocumentSchema`, `runtimeValuesSchema`, `safeParse`, and `.check()`.
-Open the working `createRuntimeConfig.ts` during the live code tour. The
-explicit implementation below is the dependency-free equivalent.
+The schemas in `runtimeConfig.ts` are the source of truth, and the application
+types are derived from them with `z.infer`. Open that file first, followed by
+`createRuntimeConfig.ts`, during the live code tour. The explicit implementation
+below is the dependency-free equivalent.
 
 ```ts
 // packages/shared-runtime-config/src/createRuntimeConfig.ts
