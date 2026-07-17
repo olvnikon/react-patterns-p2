@@ -1,11 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createPortfolioAnalytics,
-} from '@demo/feature-analytics-lab';
-import {
-  panelDefinitions,
-} from '@demo/feature-dynamic-panels';
+import { createPortfolioAnalytics } from '@demo/feature-analytics-lab';
+import { panelDefinitions } from '@demo/feature-dynamic-panels';
 import {
   createMockOrderTicketServices,
   createMockExternalContextSource,
@@ -15,9 +11,7 @@ import {
 
 import { App } from '../app/App';
 import { createAppRouter } from '../app/routes';
-import {
-  configureAppStore,
-} from '../app/store/configureAppStore';
+import { configureAppStore } from '../app/store/configureAppStore';
 import { createAppDependencies } from '../app/store/appDependencies';
 import { createBootstrapRuntime } from '../bootstrap';
 import { createPreloadRegistry } from '../prefetch';
@@ -36,10 +30,10 @@ import type {
 export function createApplication(
   runtimeConfig: RuntimeConfig,
 ): ApplicationRuntime {
-  const dependencies = createAppDependencies();
-  const store = configureAppStore(dependencies);
-  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
-  const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
+  const dependencies = createAppDependencies(); // dependencies for Redux
+  const store = configureAppStore(dependencies); // create Redux store and pass dependencies
+  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile); // this is a Replay Profile (for demo)
+  const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy); // Strategy Pattern for analytics (direct vs worker)
   const orderTicketServices = createMockOrderTicketServices();
   const orderTicketLogic = createOrderTicketMachine(orderTicketServices);
   const externalContextSource = createMockExternalContextSource();

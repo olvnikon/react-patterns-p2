@@ -20,15 +20,12 @@ const applicationRoot = rootElement;
 
 async function startApplication() {
   try {
-    const resources = await loadResources();
-    const resourceConfig = createRuntimeConfig(resources);
-    const runtimeConfig = applyDemoRuntimeConfigOverride(
-      resourceConfig,
-      window.location.search,
-    );
-    const application = createApplication(runtimeConfig);
+    const resources = await loadResources(); // resources.json is loaded as unknown
+    const resourceConfig = createRuntimeConfig(resources); // validating and typing resources
+    const runtimeConfig = applyDemoRuntimeConfigOverride(resourceConfig); // passing runtime config to application
+    const application = createApplication(runtimeConfig); // strategy parameter (just for demo)
 
-    await application.start();
+    await application.start(); // run app initialization
     application.mount(applicationRoot);
   } catch (error) {
     ReactDOM.createRoot(applicationRoot).render(
