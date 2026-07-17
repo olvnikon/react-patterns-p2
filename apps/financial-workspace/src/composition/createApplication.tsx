@@ -78,11 +78,11 @@ export function createApplication(
     });
   }
 
-  const diagnostics: ApplicationDiagnostics = Object.freeze({
+  const diagnostics: ApplicationDiagnostics = {
     runtimeConfig,
     bootstrap,
     prefetch,
-    wiring: Object.freeze([
+    wiring: [
       {
         capability: 'Order approval repository',
         implementation: 'MockOrderApprovalRepository',
@@ -126,8 +126,8 @@ export function createApplication(
         implementation: 'Lazy injectReducer wiring',
         lifetime: 'route',
       },
-    ]),
-  });
+    ],
+  };
 
   const router = createAppRouter({
     store,

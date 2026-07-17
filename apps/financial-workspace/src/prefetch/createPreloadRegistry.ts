@@ -17,12 +17,10 @@ function getErrorMessage(error: unknown): string {
 export function createPreloadRegistry(): PreloadRegistry {
   const entries = new Map<string, RegistryEntry>();
   const listeners = new Set<() => void>();
-  let snapshot: PreloadRegistrySnapshot = Object.freeze([]);
+  let snapshot: PreloadRegistrySnapshot = [];
 
   function emit() {
-    snapshot = Object.freeze(
-      Array.from(entries.values(), (entry) => entry.snapshot),
-    );
+    snapshot = Array.from(entries.values(), (entry) => entry.snapshot);
 
     for (const listener of listeners) {
       listener();
@@ -33,10 +31,10 @@ export function createPreloadRegistry(): PreloadRegistry {
     entry: RegistryEntry,
     update: Partial<PreloadSnapshot>,
   ) {
-    entry.snapshot = Object.freeze({
+    entry.snapshot = {
       ...entry.snapshot,
       ...update,
-    });
+    };
     emit();
   }
 
@@ -48,12 +46,12 @@ export function createPreloadRegistry(): PreloadRegistry {
 
       entries.set(input.id, {
         load: input.load,
-        snapshot: Object.freeze({
+        snapshot: {
           id: input.id,
           label: input.label,
           status: 'idle',
           attempts: 0,
-        }),
+        },
       });
       emit();
     },

@@ -104,6 +104,23 @@ try {
 
   assert.equal(runtimeConfig.analyticsStrategy, 'worker');
   assert.equal(runtimeConfig.prefetchMode, 'intent');
+  assert.equal(Object.isFrozen(runtimeConfig), true);
+  assert.deepEqual(
+    runtimeModule.createRuntimeConfig({
+      applicationId: 'financial-workspace-demo',
+      customData: [],
+      unrelatedPlatformMetadata: {
+        isIgnoredByThisApplication: true,
+      },
+    }),
+    {
+      applicationId: 'financial-workspace-demo',
+      analyticsStrategy: 'direct',
+      bootstrapProfile: 'standard',
+      contextProvider: 'mock',
+      prefetchMode: 'intent',
+    },
+  );
   assert.throws(
     () =>
       runtimeModule.createRuntimeConfig({
@@ -111,6 +128,29 @@ try {
         customData: [{ key: 'unknownKey', value: 'value' }],
       }),
     /Unsupported runtime configuration key/,
+  );
+  assert.throws(
+    () =>
+      runtimeModule.createRuntimeConfig({
+        applicationId: 'financial-workspace-demo',
+        customData: [
+          { key: 'prefetchMode', value: 'intent' },
+          { key: 'prefetchMode', value: 'none' },
+        ],
+      }),
+    /duplicate key "prefetchMode"/,
+  );
+  assert.throws(
+    () =>
+      runtimeModule.createRuntimeConfig({
+        applicationId: 'financial-workspace-demo',
+        customData: [{ key: 'analyticsStrategy', value: 'unsupported' }],
+      }),
+    /Invalid option/,
+  );
+  assert.throws(
+    () => runtimeModule.createRuntimeConfig({ customData: [] }),
+    /applicationId/,
   );
 
   const prefetch = prefetchModule.createPreloadRegistry();

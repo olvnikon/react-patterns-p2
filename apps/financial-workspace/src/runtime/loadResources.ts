@@ -1,5 +1,3 @@
-import type { ResourceDocument } from './runtimeConfig';
-
 export class ResourceLoadError extends Error {
   constructor(message: string) {
     super(message);
@@ -7,52 +5,7 @@ export class ResourceLoadError extends Error {
   }
 }
 
-function isCustomDataEntry(
-  value: unknown,
-): value is ResourceDocument['customData'][number] {
-  if (!value || typeof value !== 'object') {
-    return false;
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    typeof candidate.key === 'string' && typeof candidate.value === 'string'
-  );
-}
-
-function parseResourceDocument(value: unknown): ResourceDocument {
-  if (!value || typeof value !== 'object') {
-    throw new ResourceLoadError('resources.json must contain an object.');
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  if (
-    typeof candidate.applicationId !== 'string' ||
-    candidate.applicationId.trim().length === 0
-  ) {
-    throw new ResourceLoadError(
-      'resources.json must contain a non-empty applicationId.',
-    );
-  }
-
-  if (
-    !Array.isArray(candidate.customData) ||
-    !candidate.customData.every(isCustomDataEntry)
-  ) {
-    throw new ResourceLoadError(
-      'resources.json customData must be an array of string key/value entries.',
-    );
-  }
-
-  return {
-    applicationId: candidate.applicationId,
-    customData: candidate.customData,
-  };
-}
-
-export async function loadResources(): Promise<ResourceDocument> {
+export async function loadResources(): Promise<unknown> {
   const demoConfig = new URLSearchParams(window.location.search).get('config');
   const resourceFile =
     demoConfig === 'direct' ? 'resources.direct.json' : 'resources.json';
@@ -67,13 +20,9 @@ export async function loadResources(): Promise<ResourceDocument> {
     );
   }
 
-  let value: unknown;
-
   try {
-    value = await response.json();
+    return await response.json();
   } catch {
     throw new ResourceLoadError('resources.json is not valid JSON.');
   }
-
-  return parseResourceDocument(value);
 }

@@ -44,12 +44,12 @@ function projectSnapshot(
     status = 'running';
   }
 
-  return Object.freeze({
+  return {
     profile: actorSnapshot.context.profile,
     status,
     mainViewReady: actorSnapshot.context.mainViewReady,
-    tasks: Object.freeze(tasks),
-  });
+    tasks: tasks.map((task) => ({ ...task })),
+  };
 }
 
 export function createBootstrapRuntime(

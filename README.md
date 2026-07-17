@@ -54,6 +54,12 @@ collection. Application startup maps and validates those string values before
 creating any feature infrastructure. Invalid configuration renders a dedicated
 startup failure screen instead of mounting partially configured features.
 
+`createRuntimeConfig(unknown)` uses a Zod schema as the single untrusted-data
+boundary. It validates the resource document, rejects unsupported or duplicate
+keys, applies enum defaults, and returns the immutable `RuntimeConfig` consumed
+by the Composition Root. Unrelated resource-level properties are accepted and
+ignored because they may belong to the surrounding platform contract.
+
 The Composition Root lives under:
 
 ```txt

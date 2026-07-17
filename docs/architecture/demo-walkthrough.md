@@ -57,7 +57,7 @@ Open these files:
 Show:
 
 - values loaded from `resources.json`;
-- the typed config projection;
+- the Zod schema turning unknown JSON into a typed immutable config;
 - bootstrap tasks running in parallel;
 - the Main View Ready marker;
 - Composition Root diagnostics.

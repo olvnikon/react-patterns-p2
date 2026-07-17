@@ -1,6 +1,6 @@
 # Runtime Configuration Pattern
 
-> **Showcase scope:** client-side only. Load one static `resources.json`, validate a handful of `customData` values, display them on `/startup`, and pass one typed immutable object into application creation. Do not build a configuration backend, administration UI, or generic configuration framework.
+> **Showcase scope:** client-side only. Load one static `resources.json`, validate a handful of `customData` values with Zod, display them on `/startup`, and pass one typed immutable object into application creation. Do not build a configuration backend, administration UI, or generic configuration framework.
 
 ## 1. Short definition
 
@@ -254,6 +254,17 @@ export type RuntimeConfig = Readonly<{
 
 ### 6.2 Loading the resource document
 
+> **Working showcase note:** the repository now uses Zod in
+> `apps/financial-workspace/src/runtime/createRuntimeConfig.ts` as the single
+> validation boundary. The expanded hand-written parsing example below remains
+> useful for explaining what a schema library replaces, but it is not the code
+> used by the running demo.
+
+The resource object is intentionally not strict: platform-owned properties
+that this application does not consume are accepted and ignored. Unknown
+`customData` keys remain errors because they look like application
+configuration but have no defined meaning.
+
 ```ts
 // apps/financial-workspace/src/runtime/loadResources.ts
 
@@ -451,6 +462,11 @@ export function readEnum<const TValue extends string>(
 ```
 
 ### 6.5 Creating `RuntimeConfig`
+
+The running showcase implements this step declaratively with
+`resourceDocumentSchema`, `runtimeValuesSchema`, `safeParse`, and `.check()`.
+Open the working `createRuntimeConfig.ts` during the live code tour. The
+explicit implementation below is the dependency-free equivalent.
 
 ```ts
 // packages/shared-runtime-config/src/createRuntimeConfig.ts
@@ -801,16 +817,20 @@ Mitigation: keep `RuntimeConfig` data-only and inject narrow contracts.
 
 ## 11. Relevant libraries
 
-This demo starts with explicit TypeScript because it has only a few enum values.
+This demo uses **Zod** at the external resource boundary. The loader fetches and
+parses JSON; `createRuntimeConfig(unknown)` owns structural validation,
+supported values, duplicate-key checks, defaults, and error formatting.
 
-If the schema grows, reasonable options include:
+Other reasonable schema options include:
 
 - **Zod** — TypeScript-oriented parsing;
 - **Valibot** — modular schema validation;
 - **Ajv** — JSON Schema validation;
 - **Effect Schema** — when the repository already uses Effect.
 
-Do not add a schema dependency solely for four straightforward settings unless it improves consistency across the codebase.
+For this showcase, Zod makes the untrusted-data boundary visible and keeps the
+schema declarative. A small application with an equally small stable document
+could still use explicit TypeScript checks instead.
 
 The pattern itself is independent of React, Redux, XState, and any particular validation library.
 
@@ -853,26 +873,19 @@ An intentionally unavailable optional feature is **Disabled**, not **Failed**. I
 
 ## 13. Working demo location
 
-Planned repository locations:
+Repository locations:
 
 ```text
 apps/financial-workspace/public/resources.json
 
-packages/shared-runtime-config/
-  src/
-    resourceTypes.ts
-    runtimeConfig.ts
-    mapCustomData.ts
-    readConfigValue.ts
-    createRuntimeConfig.ts
-    index.ts
-
 apps/financial-workspace/src/runtime/
+  runtimeConfig.ts
   loadResources.ts
-  renderStartupFailure.ts
+  createRuntimeConfig.ts
+  index.ts
 
 apps/financial-workspace/src/composition/
-  createApplication.ts
+  createApplication.tsx
 
 apps/financial-workspace/src/main.tsx
 ```

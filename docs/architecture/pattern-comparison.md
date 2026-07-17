@@ -90,7 +90,7 @@ defines the safe local state, message, actions, and recovery path
 | Workflow and actors | XState v5 and `@xstate/react` |
 | CPU offloading | Native module Web Worker |
 | Panel render isolation | React Suspense and Error Boundary |
-| Runtime configuration | Explicit TypeScript parser and validator |
+| Runtime configuration | Zod schema mapped to an immutable TypeScript model |
 | Dependency construction | Explicit TypeScript Composition Root |
 | Prefetch registry | Small application-owned promise cache |
 
