@@ -13,8 +13,10 @@ const demoStrategyParameter = 'demoAnalyticsStrategy';
  */
 export function applyDemoRuntimeConfigOverride(
   runtimeConfig: RuntimeConfig,
+  search: string,
 ): RuntimeConfig {
-  const requestedStrategy = new URLSearchParams(window.location.search).get(
+  // Keep the browser URL explicit so this demo helper stays easy to verify.
+  const requestedStrategy = new URLSearchParams(search).get(
     demoStrategyParameter,
   );
 

@@ -26,12 +26,14 @@ function toRuntimeConfigError(error: ZodError): RuntimeConfigError {
 }
 
 export function createRuntimeConfig(resources: unknown): RuntimeConfig {
+  // Nothing outside this parse can assume the shape of resources.json.
   const resourceResult = resourceDocumentSchema.safeParse(resources);
 
   if (!resourceResult.success) {
     throw toRuntimeConfigError(resourceResult.error);
   }
 
+  // Convert the platform's entry array into the shape owned by this app.
   const values = Object.fromEntries(
     resourceResult.data.customData.map(({ key, value }) => [key, value]),
   );
@@ -41,6 +43,7 @@ export function createRuntimeConfig(resources: unknown): RuntimeConfig {
     throw toRuntimeConfigError(valuesResult.error);
   }
 
+  // The final schema applies the inferred readonly RuntimeConfig contract.
   const configResult = runtimeConfigSchema.safeParse({
     applicationId: resourceResult.data.applicationId,
     ...valuesResult.data,

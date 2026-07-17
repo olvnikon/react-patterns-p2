@@ -30,10 +30,13 @@ import type {
 export function createApplication(
   runtimeConfig: RuntimeConfig,
 ): ApplicationRuntime {
-  const dependencies = createAppDependencies(); // dependencies for Redux
-  const store = configureAppStore(dependencies); // create Redux store and pass dependencies
-  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile); // this is a Replay Profile (for demo)
-  const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy); // Strategy Pattern for analytics (direct vs worker)
+  // Application-lifetime infrastructure is created in one visible place.
+  const dependencies = createAppDependencies();
+  const store = configureAppStore(dependencies);
+  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
+  const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
+
+  // Feature logic receives capabilities, not concrete infrastructure imports.
   const orderTicketServices = createMockOrderTicketServices();
   const orderTicketLogic = createOrderTicketMachine(orderTicketServices);
   const externalContextSource = createMockExternalContextSource();
@@ -43,6 +46,7 @@ export function createApplication(
   );
   const prefetch = createPreloadRegistry();
 
+  // Intent and activation share these registered loader promises.
   prefetch.register({
     id: 'route:reports',
     label: 'Reports route module',
@@ -72,6 +76,7 @@ export function createApplication(
     });
   }
 
+  // Diagnostics make otherwise invisible Composition Root wiring presentable.
   const diagnostics: ApplicationDiagnostics = {
     runtimeConfig,
     bootstrap,
@@ -140,6 +145,7 @@ export function createApplication(
     diagnostics,
     async start() {
       bootstrap.start();
+      // This promise is the single gate before React may mount.
       await bootstrap.waitUntilMainViewReady();
     },
     mount(rootElement) {
@@ -155,6 +161,7 @@ export function createApplication(
       );
     },
     stop() {
+      // The Composition Root also owns application-lifetime cleanup.
       reactRoot?.unmount();
       reactRoot = undefined;
       analytics.dispose();

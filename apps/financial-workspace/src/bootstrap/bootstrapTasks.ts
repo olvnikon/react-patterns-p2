@@ -8,6 +8,7 @@ type TaskDefinition = Omit<
   'status' | 'attempts' | 'errorMessage'
 >;
 
+// Dependencies define order; flags describe failure and readiness impact.
 export const bootstrapTaskDefinitions: Readonly<
   Record<BootstrapTaskId, TaskDefinition>
 > = {

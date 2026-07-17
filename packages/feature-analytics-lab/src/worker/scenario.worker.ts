@@ -61,6 +61,7 @@ async function runScenario(
         },
       });
 
+      // Yield between chunks so cancellation messages can enter the mailbox.
       await yieldToWorkerQueue();
     }
 

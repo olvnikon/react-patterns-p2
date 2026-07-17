@@ -41,6 +41,7 @@ function validateScenario(
     : 'Scenario Summary requires portfolioId.';
 }
 
+// The host consumes one contract for loading, validation, and presentation.
 export const panelDefinitions: Readonly<
   Record<PanelType, PanelDefinition>
 > = {

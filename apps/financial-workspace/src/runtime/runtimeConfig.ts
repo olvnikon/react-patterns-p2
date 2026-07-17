@@ -25,6 +25,7 @@ export const resourceCustomDataEntrySchema = z.object({
   value: z.string(),
 });
 
+// Platform key/value entries are validated before they become application config.
 const customDataSchema = z
   .array(resourceCustomDataEntrySchema)
   .check((context) => {
@@ -61,6 +62,7 @@ export const resourceDocumentSchema = z.object({
   customData: customDataSchema,
 });
 
+// Defaults and supported values live beside the types inferred from them.
 export const runtimeValuesSchema = z.strictObject({
   analyticsStrategy: analyticsStrategySchema.default('direct'),
   bootstrapProfile: bootstrapProfileSchema.default('standard'),
@@ -68,6 +70,7 @@ export const runtimeValuesSchema = z.strictObject({
   prefetchMode: prefetchModeSchema.default('intent'),
 });
 
+// readonly() makes the parsed result immutable in TypeScript and at runtime.
 export const runtimeConfigSchema = z.strictObject({
   applicationId: resourceDocumentSchema.shape.applicationId,
   analyticsStrategy: analyticsStrategySchema,

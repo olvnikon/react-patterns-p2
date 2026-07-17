@@ -12,6 +12,7 @@ export function canIntentPrefetch(mode: PrefetchMode): boolean {
     return false;
   }
 
+  // User bandwidth preference wins over speculative loading.
   return !(navigator as NavigatorWithConnection).connection?.saveData;
 }
 
@@ -31,6 +32,7 @@ export function createIntentHandlers(
   }
 
   return {
+    // Pointer and keyboard intent use the same policy and loader.
     onPointerEnter: preload,
     onFocus: preload,
   };

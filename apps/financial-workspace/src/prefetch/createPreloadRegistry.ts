@@ -15,6 +15,7 @@ function getErrorMessage(error: unknown): string {
 }
 
 export function createPreloadRegistry(): PreloadRegistry {
+  // One registry lets intent and activation reuse the same Promise.
   const entries = new Map<string, RegistryEntry>();
   const listeners = new Set<() => void>();
   let snapshot: PreloadRegistrySnapshot = [];
@@ -63,6 +64,7 @@ export function createPreloadRegistry(): PreloadRegistry {
       }
 
       if (entry.promise) {
+        // Deduplicate hover, focus, and activation racing for one module.
         return entry.promise;
       }
 
@@ -89,6 +91,7 @@ export function createPreloadRegistry(): PreloadRegistry {
           return value;
         })
         .catch((error: unknown) => {
+          // Clear rejected Promises so a later interaction can retry.
           entry.promise = undefined;
           updateEntry(entry, {
             status: 'failed',

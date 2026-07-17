@@ -152,6 +152,7 @@ export function createOrderTicketMachine(
       parent: input.parent,
     }),
     states: {
+      // Finite states define which events are legal; context stores workflow data.
       editing: {
         entry: assign({
           decision: undefined,
@@ -207,6 +208,7 @@ export function createOrderTicketMachine(
         },
       },
       checking: {
+        // Invoked work starts and stops with the state that owns it.
         invoke: {
           src: 'checkOrder',
           input: ({ context }) => ({
@@ -286,6 +288,7 @@ export function createOrderTicketMachine(
         },
         after: {
           800: {
+            // A client timeout means unknown outcome, not business rejection.
             guard: ({ context }) =>
               context.outcome === 'timeout-reconciles' ||
               context.outcome === 'timeout-not-found',
@@ -301,6 +304,7 @@ export function createOrderTicketMachine(
         },
       },
       reconciling: {
+        // Reuse the idempotency key before deciding whether retry is safe.
         invoke: {
           src: 'reconcileOrder',
           input: ({ context }) => ({
@@ -331,6 +335,7 @@ export function createOrderTicketMachine(
         },
       },
       accepted: {
+        // Child actors report facts; they never mutate parent state directly.
         entry: ({ context }) => {
           context.parent?.send({
             type: 'ticket.accepted',

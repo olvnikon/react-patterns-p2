@@ -58,6 +58,7 @@ export function createWorkflowWorkspaceMachine(
   orderTicketLogic: OrderTicketLogic,
   externalContextSource: ExternalContextSource,
 ) {
+  // Adapt the external callback API into the workspace event protocol.
   const externalContextActor = fromCallback<
     WorkflowWorkspaceEvent
   >(({ sendBack }) =>
@@ -92,6 +93,7 @@ export function createWorkflowWorkspaceMachine(
       nextTicketNumber: 4,
     },
     entry: assign({
+      // Spawned tickets share logic but own independent state and mailboxes.
       tickets: ({ spawn, self }) => {
         const parent = self as OrderTicketParentRef;
         const ticketOne = spawn('orderTicket', {
@@ -169,6 +171,7 @@ export function createWorkflowWorkspaceMachine(
       'ticket.close': {
         guard: 'ticketExists',
         actions: [
+          // Stop the process before removing its reference from parent state.
           stopChild(
             ({ context, event }) => context.tickets[event.ticketId],
           ),
@@ -216,6 +219,7 @@ export function createWorkflowWorkspaceMachine(
       },
       'workspace.side.change': {
         actions: [
+          // Broadcast is explicit: the parent targets each known actor.
           ({ context, event }) => {
             for (const ticket of Object.values(context.tickets)) {
               ticket.send({
@@ -235,6 +239,7 @@ export function createWorkflowWorkspaceMachine(
       },
       'external.instrument.selected': {
         actions: [
+          // External context is routed only to the selected child actor.
           ({ context, event }) => {
             if (!context.selectedTicketId) {
               return;

@@ -1,3 +1,4 @@
+// Intent handlers and router activation call the same cached import functions.
 let reportsRoutePromise:
   | Promise<typeof import('./ReportsRoute')>
   | undefined;

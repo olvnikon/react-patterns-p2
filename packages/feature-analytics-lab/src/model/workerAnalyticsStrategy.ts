@@ -15,6 +15,7 @@ export function createWorkerAnalyticsStrategy(
       input: ScenarioInput,
       options?: CalculateScenarioOptions,
     ): Promise<ScenarioResult> {
+      // Threading remains hidden behind the stable Strategy contract.
       return client.calculate(input, options);
     },
     dispose() {

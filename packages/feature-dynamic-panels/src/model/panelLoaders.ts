@@ -3,6 +3,7 @@ import type {
   PanelType,
 } from './panelTypes';
 
+// Module-level Promise caches are shared by prefetch and React.lazy activation.
 let portfolioPromise: Promise<PanelModule> | undefined;
 let activityPromise: Promise<PanelModule> | undefined;
 let scenarioPromise: Promise<PanelModule> | undefined;

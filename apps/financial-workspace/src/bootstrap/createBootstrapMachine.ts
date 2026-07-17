@@ -230,6 +230,7 @@ export const bootstrapMachine = setup({
     tasks: createInitialTasks(),
   }),
   states: {
+    // These parallel branches must finish before the Main View milestone.
     critical: {
       type: 'parallel',
       states: {
@@ -417,6 +418,7 @@ export const bootstrapMachine = setup({
         },
       },
     },
+    // Optional work starts after readiness and may degrade independently.
     optional: {
       type: 'parallel',
       states: {

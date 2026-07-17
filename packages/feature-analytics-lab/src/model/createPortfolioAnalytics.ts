@@ -9,6 +9,7 @@ import { createWorkerScenarioClient } from '../worker/createWorkerScenarioClient
 export function createPortfolioAnalytics(
   strategyName: AnalyticsStrategyName,
 ): PortfolioAnalytics {
+  // Selection is centralized; consumers only see PortfolioAnalytics.
   switch (strategyName) {
     case 'direct':
       return createDirectAnalyticsStrategy();

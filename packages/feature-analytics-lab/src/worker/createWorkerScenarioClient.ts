@@ -28,6 +28,7 @@ function createAbortError() {
 }
 
 export function createWorkerScenarioClient(): WorkerScenarioClient {
+  // Request IDs correlate concurrent Worker messages with their Promises.
   const pendingRequests = new Map<string, PendingRequest>();
   let worker: Worker | undefined;
 
@@ -45,6 +46,7 @@ export function createWorkerScenarioClient(): WorkerScenarioClient {
       return worker;
     }
 
+    // Create the Worker lazily so unused analytics costs nothing at startup.
     worker = new Worker(new URL('./scenario.worker.ts', import.meta.url), {
       type: 'module',
       name: 'synthetic-portfolio-analytics',
@@ -101,6 +103,7 @@ export function createWorkerScenarioClient(): WorkerScenarioClient {
 
       return new Promise((resolve, reject) => {
         const abort = () => {
+          // Cancellation is an explicit protocol message across the thread boundary.
           const message: WorkerRequest = {
             type: 'scenario.cancel',
             requestId,
@@ -134,6 +137,7 @@ export function createWorkerScenarioClient(): WorkerScenarioClient {
       });
     },
     dispose() {
+      // Reject callers before terminating the application-owned Worker.
       rejectAll(new Error('Analytics capability disposed.'));
       worker?.terminate();
       worker = undefined;

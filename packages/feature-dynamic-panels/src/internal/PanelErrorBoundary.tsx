@@ -33,6 +33,7 @@ export class PanelErrorBoundary extends Component<
   }
 
   componentDidUpdate(previousProps: PanelErrorBoundaryProps) {
+    // A host revision retries without remounting unaffected sibling panels.
     if (
       previousProps.resetKey !== this.props.resetKey &&
       this.state.error

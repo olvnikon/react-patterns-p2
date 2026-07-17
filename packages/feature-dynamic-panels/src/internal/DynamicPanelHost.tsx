@@ -20,6 +20,7 @@ export function DynamicPanelHost({
   onRemove,
 }: DynamicPanelHostProps) {
   const definition = panelDefinitions[instance.type];
+  // Reject invalid local config before the panel starts its own request.
   const validationError = definition.validate(instance.config);
   const LazyPanel = useMemo(
     () => lazy(definition.load),
@@ -27,6 +28,7 @@ export function DynamicPanelHost({
   );
 
   if (!instance.enabled) {
+    // Disabled is intentional configuration, not an operational failure.
     return (
       <article className="dynamic-panel dynamic-panel--disabled">
         <div className="dynamic-panel__heading">
@@ -68,6 +70,7 @@ export function DynamicPanelHost({
   }
 
   return (
+    // Each lazy panel owns a local loading and rendering-failure boundary.
     <PanelErrorBoundary
       panelTitle={definition.title}
       resetKey={instance.revision}

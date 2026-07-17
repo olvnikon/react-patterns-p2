@@ -18,6 +18,7 @@ type BootstrapActor = ActorRefFrom<typeof bootstrapMachine>;
 function projectSnapshot(
   actor: BootstrapActor,
 ): BootstrapSnapshot {
+  // Project the actor tree into one presenter-friendly readiness model.
   const actorSnapshot = actor.getSnapshot();
   const tasks = Object.values(actorSnapshot.context.tasks);
   const criticalFailure = tasks.some(
@@ -104,6 +105,7 @@ export function createBootstrapRuntime(
       actor.start();
     },
     waitUntilMainViewReady() {
+      // Application startup awaits this gate; optional work may continue later.
       return new Promise<void>((resolve, reject) => {
         function inspect() {
           if (currentSnapshot.mainViewReady) {
@@ -137,6 +139,7 @@ export function createBootstrapRuntime(
       });
     },
     replay(profile) {
+      // Replay replaces only the diagnostic actor, keeping the mounted demo alive.
       createAndBindActor(profile);
       emit();
       actor.start();

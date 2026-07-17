@@ -21,6 +21,7 @@ export function createDirectAnalyticsStrategy(): PortfolioAnalytics {
     ): Promise<ScenarioResult> {
       throwIfAborted(options.signal);
 
+      // Same algorithm and contract as the Worker Strategy, but on this thread.
       const result = calculateScenario(input);
 
       throwIfAborted(options.signal);
