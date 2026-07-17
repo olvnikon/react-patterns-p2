@@ -22,7 +22,7 @@ function formatScore(value: number): string {
 
 function restartWithStrategy(strategy: AnalyticsStrategyName) {
   const search = new URLSearchParams(window.location.search);
-  search.set('config', strategy);
+  search.set('demoAnalyticsStrategy', strategy);
   window.location.search = search.toString();
 }
 
@@ -151,7 +151,7 @@ export function AnalyticsEntry({ analytics }: AnalyticsEntryProps) {
           </div>
 
           <div className="strategy-switcher">
-            <span>Restart application with:</span>
+            <span>Restart demo with:</span>
             <button
               type="button"
               disabled={analytics.strategyName === 'direct'}
@@ -166,6 +166,10 @@ export function AnalyticsEntry({ analytics }: AnalyticsEntryProps) {
             >
               Worker
             </button>
+            <small>
+              Demo-only URL override; the application still loads one
+              resources.json.
+            </small>
           </div>
 
           <label className="form-field">

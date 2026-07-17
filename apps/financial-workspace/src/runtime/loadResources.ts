@@ -6,10 +6,7 @@ export class ResourceLoadError extends Error {
 }
 
 export async function loadResources(): Promise<unknown> {
-  const demoConfig = new URLSearchParams(window.location.search).get('config');
-  const resourceFile =
-    demoConfig === 'direct' ? 'resources.direct.json' : 'resources.json';
-  const resourceUrl = `${import.meta.env.BASE_URL}${resourceFile}`;
+  const resourceUrl = `${import.meta.env.BASE_URL}resources.json`;
   const response = await fetch(resourceUrl, {
     cache: 'no-store',
   });

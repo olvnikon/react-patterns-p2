@@ -306,7 +306,7 @@ textarea:focus-visible {
 }
 
 .status-chip {
-  min-height: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   width: fit-content;

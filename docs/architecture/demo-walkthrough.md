@@ -35,7 +35,7 @@ private.
 
 | Pattern or practice | Route | Open first | Supporting files |
 | --- | --- | --- | --- |
-| Runtime Configuration | `/startup` | [`resources.json`](../../apps/financial-workspace/public/resources.json), [`runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts) | [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts), [`loadResources.ts`](../../apps/financial-workspace/src/runtime/loadResources.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
+| Runtime Configuration | `/startup` | [`resources.json`](../../apps/financial-workspace/public/resources.json), [`runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts) | [`createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts), [`loadResources.ts`](../../apps/financial-workspace/src/runtime/loadResources.ts), [`applyDemoRuntimeConfigOverride.ts`](../../apps/financial-workspace/src/runtime/applyDemoRuntimeConfigOverride.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
 | Composition Root | `/startup` | [`createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx) | [`applicationTypes.ts`](../../apps/financial-workspace/src/composition/applicationTypes.ts), [`main.tsx`](../../apps/financial-workspace/src/main.tsx) |
 | Strategy Pattern | `/analytics` | [`analyticsTypes.ts`](../../packages/feature-analytics-lab/src/model/analyticsTypes.ts), [`createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts) | [`directAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/directAnalyticsStrategy.ts), [`workerAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/workerAnalyticsStrategy.ts) |
 | State Machines and Statecharts | `/workflows` | [`createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts) | [`createMockOrderTicketServices.ts`](../../packages/feature-workflow-lab/src/model/createMockOrderTicketServices.ts), [`useOrderTicket.ts`](../../packages/feature-workflow-lab/src/react/useOrderTicket.ts), [`OrderTicketEntry.tsx`](../../packages/feature-workflow-lab/src/OrderTicketEntry.tsx) |
@@ -94,9 +94,10 @@ demo failure does not unmount the presentation UI.
 1. [`public/resources.json`](../../apps/financial-workspace/public/resources.json)
 2. [`runtime/runtimeConfig.ts`](../../apps/financial-workspace/src/runtime/runtimeConfig.ts)
 3. [`runtime/createRuntimeConfig.ts`](../../apps/financial-workspace/src/runtime/createRuntimeConfig.ts)
-4. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
-5. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
-6. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
+4. [`runtime/applyDemoRuntimeConfigOverride.ts`](../../apps/financial-workspace/src/runtime/applyDemoRuntimeConfigOverride.ts)
+5. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
+6. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
+7. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
 
 Explain:
 
@@ -156,8 +157,9 @@ The default `resources.json` selects the **Worker Strategy**.
 
 ### Direct Strategy
 
-1. Click **Direct** under **Restart application with**. This sets
-   `?config=direct` and performs a full application restart.
+1. Click **Direct** under **Restart demo with**. This sets the presentation-only
+   `?demoAnalyticsStrategy=direct` override and performs a full application
+   restart. The application still loads its one `resources.json`.
 2. Verify the chip now says **Direct Strategy**.
 3. Again choose **125,000** and **Heavy**, then click **Run calculation**.
 4. Observe that the heartbeat pauses while the synchronous calculation owns
@@ -167,7 +169,9 @@ The default `resources.json` selects the **Worker Strategy**.
 
 The Direct and Worker buttons deliberately restart the app instead of mutating
 the Strategy in React. Runtime Configuration selects the Strategy, and the
-Composition Root constructs it once.
+Composition Root constructs it once. The query override is demo scaffolding,
+not a second resource document or a recommended production configuration
+source.
 
 ### Open these files
 

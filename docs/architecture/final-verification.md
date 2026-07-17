@@ -40,7 +40,6 @@ The Vite development server returned HTTP 200 for:
 /orders/ORD-1001/approval
 /reports
 /resources.json
-/resources.direct.json
 ```
 
 ## Production output

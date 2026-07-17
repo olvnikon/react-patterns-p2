@@ -72,6 +72,9 @@ try {
   const runtimeModule = await server.ssrLoadModule(
     '/src/runtime/createRuntimeConfig.ts',
   );
+  const demoRuntimeOverrideModule = await server.ssrLoadModule(
+    '/src/runtime/applyDemoRuntimeConfigOverride.ts',
+  );
   const prefetchModule = await server.ssrLoadModule(
     '/src/prefetch/createPreloadRegistry.ts',
   );
@@ -105,6 +108,20 @@ try {
   assert.equal(runtimeConfig.analyticsStrategy, 'worker');
   assert.equal(runtimeConfig.prefetchMode, 'intent');
   assert.equal(Object.isFrozen(runtimeConfig), true);
+  assert.equal(
+    demoRuntimeOverrideModule.applyDemoRuntimeConfigOverride(
+      runtimeConfig,
+      '?demoAnalyticsStrategy=direct',
+    ).analyticsStrategy,
+    'direct',
+  );
+  assert.equal(
+    demoRuntimeOverrideModule.applyDemoRuntimeConfigOverride(
+      runtimeConfig,
+      '?demoAnalyticsStrategy=unsupported',
+    ),
+    runtimeConfig,
+  );
   assert.deepEqual(
     runtimeModule.createRuntimeConfig({
       applicationId: 'financial-workspace-demo',

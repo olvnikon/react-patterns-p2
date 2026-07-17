@@ -89,9 +89,10 @@ PortfolioAnalytics
 ```
 
 The Composition Root selects the implementation from runtime configuration.
-The default `resources.json` selects the Worker Strategy. The presentation UI
-can restart with `resources.direct.json` by setting the local `config=direct`
-demo profile.
+The application's single `resources.json` selects the Worker Strategy. The
+presentation UI can restart with a demo-only
+`demoAnalyticsStrategy=direct` URL override so both implementations can be
+compared without editing the file during a live demo.
 
 Both Strategies run the same deterministic synthetic algorithm. The Direct
 Strategy intentionally performs it on the browser main thread. The Worker

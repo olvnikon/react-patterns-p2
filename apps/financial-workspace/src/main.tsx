@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { createApplication } from './composition';
-import { createRuntimeConfig, loadResources } from './runtime';
+import {
+  applyDemoRuntimeConfigOverride,
+  createRuntimeConfig,
+  loadResources,
+} from './runtime';
 import { StartupFailure } from './StartupFailure';
 import './styles.css';
 
@@ -17,7 +21,11 @@ const applicationRoot = rootElement;
 async function startApplication() {
   try {
     const resources = await loadResources();
-    const runtimeConfig = createRuntimeConfig(resources);
+    const resourceConfig = createRuntimeConfig(resources);
+    const runtimeConfig = applyDemoRuntimeConfigOverride(
+      resourceConfig,
+      window.location.search,
+    );
     const application = createApplication(runtimeConfig);
 
     await application.start();
