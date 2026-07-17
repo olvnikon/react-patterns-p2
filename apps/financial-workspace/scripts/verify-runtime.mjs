@@ -81,6 +81,18 @@ try {
   const bootstrapModule = await server.ssrLoadModule(
     '/src/bootstrap/createBootstrapRuntime.ts',
   );
+  const bootstrapOperationsModule = await server.ssrLoadModule(
+    '/src/bootstrap/createBootstrapOperations.ts',
+  );
+  const bootstrapServicesModule = await server.ssrLoadModule(
+    '/src/bootstrap/createMockBootstrapServices.ts',
+  );
+  const storeModule = await server.ssrLoadModule(
+    '/src/app/store/configureAppStore.ts',
+  );
+  const dependenciesModule = await server.ssrLoadModule(
+    '/src/app/store/appDependencies.ts',
+  );
   const analyticsModule = await server.ssrLoadModule(
     toViteFsPath(
       'packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts',
@@ -203,8 +215,70 @@ try {
   await prefetch.preload('retry');
   assert.equal(prefetch.getEntry('retry')?.attempts, 2);
 
-  const optionalBootstrap =
-    bootstrapModule.createBootstrapRuntime('optional-failure');
+  const directRuntimeConfig =
+    demoRuntimeOverrideModule.applyDemoRuntimeConfigOverride(
+      runtimeConfig,
+      '?demoAnalyticsStrategy=direct',
+    );
+  const dependencies = dependenciesModule.createAppDependencies();
+  const store = storeModule.configureAppStore(dependencies);
+  const analytics = analyticsModule.createPortfolioAnalytics('direct');
+  const storedWorkspace = new Map();
+  const storage = {
+    getItem(key) {
+      return storedWorkspace.get(key) ?? null;
+    },
+    setItem(key, value) {
+      storedWorkspace.set(key, value);
+    },
+  };
+  const bootstrapServices =
+    bootstrapServicesModule.createMockBootstrapServices(
+      dependencies.clock,
+      storage,
+    );
+  const bootstrapOperations =
+    bootstrapOperationsModule.createBootstrapOperations({
+      runtimeConfig: directRuntimeConfig,
+      store,
+      services: bootstrapServices,
+      analytics,
+      logger: dependencies.logger,
+      clock: dependencies.clock,
+    });
+
+  const standardBootstrap = bootstrapModule.createBootstrapRuntime(
+    'standard',
+    bootstrapOperations,
+  );
+  standardBootstrap.start();
+  await standardBootstrap.waitUntilMainViewReady();
+  await waitForSnapshot(
+    standardBootstrap,
+    (snapshot) => snapshot.status === 'ready',
+    'standard bootstrap completion',
+  );
+  assert.equal(store.getState().bootstrapData.session.userId, 'USR-DEMO');
+  assert.equal(
+    store.getState().bootstrapData.referenceData.instruments.length,
+    3,
+  );
+  assert.equal(
+    store.getState().bootstrapData.workspace.selectedPortfolioId,
+    'PF-001',
+  );
+  assert.equal(store.getState().bootstrapData.mainViewReady, true);
+  assert.equal(store.getState().bootstrapData.marketData.status, 'connected');
+  assert.equal(
+    store.getState().bootstrapData.analyticsWarmup.strategy,
+    'direct',
+  );
+  standardBootstrap.stop();
+
+  const optionalBootstrap = bootstrapModule.createBootstrapRuntime(
+    'optional-failure',
+    bootstrapOperations,
+  );
   optionalBootstrap.start();
   await optionalBootstrap.waitUntilMainViewReady();
   await waitForSnapshot(
@@ -212,26 +286,39 @@ try {
     (snapshot) => snapshot.status === 'degraded',
     'optional bootstrap degradation',
   );
+  assert.equal(store.getState().bootstrapData.mainViewReady, true);
+  assert.equal(store.getState().bootstrapData.analyticsWarmup, undefined);
   optionalBootstrap.retry('analyticsWarmup');
   await waitForSnapshot(
     optionalBootstrap,
     (snapshot) => snapshot.status === 'ready',
     'optional bootstrap recovery',
   );
+  assert.equal(
+    store.getState().bootstrapData.analyticsWarmup.strategy,
+    'direct',
+  );
   optionalBootstrap.stop();
 
-  const criticalBootstrap =
-    bootstrapModule.createBootstrapRuntime('critical-failure');
+  const criticalBootstrap = bootstrapModule.createBootstrapRuntime(
+    'critical-failure',
+    bootstrapOperations,
+  );
   criticalBootstrap.start();
   await assert.rejects(
     criticalBootstrap.waitUntilMainViewReady(),
     /Reference data failed/,
   );
+  assert.equal(store.getState().bootstrapData.referenceData, undefined);
+  assert.equal(store.getState().bootstrapData.mainViewReady, false);
   criticalBootstrap.retry('referenceData');
   await criticalBootstrap.waitUntilMainViewReady();
+  assert.equal(
+    store.getState().bootstrapData.referenceData.instruments.length,
+    3,
+  );
   criticalBootstrap.stop();
 
-  const analytics = analyticsModule.createPortfolioAnalytics('direct');
   const scenarioInput = {
     positionCount: 2_000,
     iterations: 8,

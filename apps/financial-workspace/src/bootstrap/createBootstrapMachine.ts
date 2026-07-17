@@ -5,6 +5,7 @@ import {
 } from 'xstate';
 
 import type { BootstrapProfile } from '../runtime';
+import type { BootstrapOperations } from './createBootstrapOperations';
 import { bootstrapTaskDefinitions } from './bootstrapTasks';
 import type {
   BootstrapTaskId,
@@ -108,7 +109,7 @@ async function runTask({
 }: {
   input: RunTaskInput;
   signal: AbortSignal;
-}) {
+}, operations: BootstrapOperations) {
   await wait(taskDelay(input.taskId, input.profile), signal);
 
   if (
@@ -126,6 +127,8 @@ async function runTask({
   ) {
     throw new Error('Synthetic optional analytics warmup failure.');
   }
+
+  await operations.run(input.taskId, signal);
 }
 
 function markRunning(taskId: BootstrapTaskId) {
@@ -168,14 +171,18 @@ function retries(taskId: BootstrapTaskId) {
     event.type === 'RETRY_TASK' && event.taskId === taskId;
 }
 
-export const bootstrapMachine = setup({
+export function createBootstrapMachine(operations: BootstrapOperations) {
+  return setup({
   types: {
     context: {} as BootstrapContext,
     input: {} as BootstrapInput,
     events: {} as BootstrapEvent,
   },
   actors: {
-    runTask: fromPromise(runTask),
+    runTask: fromPromise(({ input, signal }: {
+      input: RunTaskInput;
+      signal: AbortSignal;
+    }) => runTask({ input, signal }, operations)),
   },
   actions: {
     markRunning: assign(
@@ -221,7 +228,7 @@ export const bootstrapMachine = setup({
       }),
     ),
   },
-}).createMachine({
+  }).createMachine({
   id: 'applicationBootstrap',
   initial: 'critical',
   context: ({ input }) => ({
@@ -490,5 +497,6 @@ export const bootstrapMachine = setup({
     complete: {
       type: 'final',
     },
-  },
-});
+    },
+  });
+}

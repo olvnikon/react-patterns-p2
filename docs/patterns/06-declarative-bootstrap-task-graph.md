@@ -2807,33 +2807,23 @@ Critical failure still stops startup.
 
 ## 39. Working demo location
 
-Planned repository locations:
+Implemented repository locations:
 
 ```text
-packages/shared-bootstrap/
-  src/
-    types.ts
-    validateBootstrapGraph.ts
-    calculateRetryDelay.ts
-    executeTask.ts
-    createTaskMachine.ts
-    graphState.ts
-    createBootstrapMachine.ts
-    createBootstrapController.ts
-    projections.ts
-    index.ts
-
 apps/financial-workspace/src/bootstrap/
   bootstrapTasks.ts
-  startApplication.ts
-  bootstrapDependencies.ts
+  bootstrapServices.ts
+  createMockBootstrapServices.ts
+  createBootstrapOperations.ts
+  createBootstrapMachine.ts
+  createBootstrapRuntime.ts
+
+apps/financial-workspace/src/app/store/
+  bootstrapDataSlice.ts
+  bootstrapDataSelectors.ts
 
 apps/financial-workspace/src/routes/
   StartupRoute.tsx
-
-apps/financial-workspace/src/components/
-  BootstrapGraph.tsx
-  StartupFailurePanel.tsx
 ```
 
 Primary visible demo:
@@ -2842,9 +2832,10 @@ Primary visible demo:
 /startup
 ```
 
-Status during documentation phase:
-
-> Planned. Source paths become definitive after Phase 3 implementation.
+The machine schedules injected operations. Those operations call abort-aware
+mock services, warm the configured analytics Strategy, and dispatch useful
+results into the static Redux `bootstrapData` slice. The Startup route shows
+execution state and corresponding Redux output side by side.
 
 ---
 
@@ -2875,19 +2866,20 @@ optional capabilities continue
 ### Demo sequence
 
 1. Open `/startup`.
-2. Select `slow-startup`.
-3. Restart the demo.
-4. Show root tasks starting in parallel.
-5. Show `session` waiting for `infrastructure`.
-6. Show `referenceData` and `workspaceState` starting together.
-7. Show Main View Ready.
-8. Show optional tasks continuing afterward.
-9. Trigger optional analytics failure.
-10. Show application remains ready but degraded.
-11. Trigger critical session failure.
-12. Show startup failure.
-13. Retry a selected transient task.
-14. Show successful recovery.
+2. Point out the initial session, reference data, workspace, and optional
+   capability outputs stored in Redux.
+3. Select `slow-startup` and watch the Redux outputs reset.
+4. Show Infrastructure and Platform Context starting in parallel.
+5. Show Session waiting for Infrastructure.
+6. Show Reference Data and Workspace State starting together.
+7. Watch each successful operation populate Redux.
+8. Show Main View Ready before optional work completes.
+9. Select `optional-failure` and show Analytics Warmup fail without its Redux
+   success output.
+10. Retry Analytics Warmup and show its real calculation result appear.
+11. Select `critical-failure` and show Reference Data block Main View.
+12. Retry Reference Data and show the graph continue without rerunning
+    successful siblings.
 
 ### Questions to ask the audience
 

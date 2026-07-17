@@ -23,7 +23,7 @@ export const bootstrapTaskDefinitions: Readonly<
   infrastructure: {
     id: 'infrastructure',
     label: 'Infrastructure',
-    description: 'Initialize fake application-side services.',
+    description: 'Record startup and initialize the Redux bootstrap model.',
     dependencies: ['runtimeConfig'],
     critical: true,
     blocksMainView: true,
@@ -31,7 +31,7 @@ export const bootstrapTaskDefinitions: Readonly<
   platformContext: {
     id: 'platformContext',
     label: 'Platform context',
-    description: 'Initialize the configured local context adapter.',
+    description: 'Initialize the configured mock context adapter.',
     dependencies: ['runtimeConfig'],
     critical: true,
     blocksMainView: true,
@@ -39,7 +39,7 @@ export const bootstrapTaskDefinitions: Readonly<
   session: {
     id: 'session',
     label: 'Demo session',
-    description: 'Restore generic local session context.',
+    description: 'Load a generic session from a mocked repository.',
     dependencies: ['infrastructure'],
     critical: true,
     blocksMainView: true,
@@ -47,7 +47,7 @@ export const bootstrapTaskDefinitions: Readonly<
   referenceData: {
     id: 'referenceData',
     label: 'Reference data',
-    description: 'Load fake instruments and portfolio labels.',
+    description: 'Load fake instruments and portfolios into Redux.',
     dependencies: ['session'],
     critical: true,
     blocksMainView: true,
@@ -55,7 +55,7 @@ export const bootstrapTaskDefinitions: Readonly<
   workspaceState: {
     id: 'workspaceState',
     label: 'Workspace state',
-    description: 'Restore a fake local workspace preference.',
+    description: 'Restore a versioned preference from localStorage.',
     dependencies: ['session'],
     critical: true,
     blocksMainView: true,
@@ -63,7 +63,7 @@ export const bootstrapTaskDefinitions: Readonly<
   mainView: {
     id: 'mainView',
     label: 'Main view',
-    description: 'Reach the milestone that allows React to mount.',
+    description: 'Verify required outputs and open the React mount gate.',
     dependencies: ['platformContext', 'referenceData', 'workspaceState'],
     critical: true,
     blocksMainView: true,
@@ -71,7 +71,7 @@ export const bootstrapTaskDefinitions: Readonly<
   marketData: {
     id: 'marketData',
     label: 'Market data',
-    description: 'Warm a fake optional live-data capability.',
+    description: 'Complete a mocked market-data connection handshake.',
     dependencies: ['mainView'],
     critical: false,
     blocksMainView: false,
@@ -79,7 +79,7 @@ export const bootstrapTaskDefinitions: Readonly<
   analyticsWarmup: {
     id: 'analyticsWarmup',
     label: 'Analytics warmup',
-    description: 'Warm the configured synthetic analytics capability.',
+    description: 'Run a tiny calculation through the configured Strategy.',
     dependencies: ['mainView'],
     critical: false,
     blocksMainView: false,

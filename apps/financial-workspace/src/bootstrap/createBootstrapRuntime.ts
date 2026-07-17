@@ -5,7 +5,8 @@ import {
 } from 'xstate';
 
 import type { BootstrapProfile } from '../runtime';
-import { bootstrapMachine } from './createBootstrapMachine';
+import { createBootstrapMachine } from './createBootstrapMachine';
+import type { BootstrapOperations } from './createBootstrapOperations';
 import type {
   BootstrapRuntime,
   BootstrapSnapshot,
@@ -13,7 +14,8 @@ import type {
   BootstrapTaskId,
 } from './bootstrapTypes';
 
-type BootstrapActor = ActorRefFrom<typeof bootstrapMachine>;
+type BootstrapMachine = ReturnType<typeof createBootstrapMachine>;
+type BootstrapActor = ActorRefFrom<BootstrapMachine>;
 
 function projectSnapshot(
   actor: BootstrapActor,
@@ -55,7 +57,9 @@ function projectSnapshot(
 
 export function createBootstrapRuntime(
   initialProfile: BootstrapProfile,
+  operations: BootstrapOperations,
 ): BootstrapRuntime {
+  const bootstrapMachine = createBootstrapMachine(operations);
   const listeners = new Set<() => void>();
   let actor: BootstrapActor;
   let actorSubscription: Subscription | undefined;
@@ -82,6 +86,7 @@ export function createBootstrapRuntime(
     actorSubscription = actor.subscribe(emit);
   }
 
+  operations.reset();
   actor = createActor(bootstrapMachine, {
     input: {
       profile: initialProfile,
@@ -140,6 +145,7 @@ export function createBootstrapRuntime(
     },
     replay(profile) {
       // Replay replaces only the diagnostic actor, keeping the mounted demo alive.
+      operations.reset();
       createAndBindActor(profile);
       emit();
       actor.start();

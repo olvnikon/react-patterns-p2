@@ -13,7 +13,11 @@ import { App } from '../app/App';
 import { createAppRouter } from '../app/routes';
 import { configureAppStore } from '../app/store/configureAppStore';
 import { createAppDependencies } from '../app/store/appDependencies';
-import { createBootstrapRuntime } from '../bootstrap';
+import {
+  createBootstrapOperations,
+  createBootstrapRuntime,
+  createMockBootstrapServices,
+} from '../bootstrap';
 import { createPreloadRegistry } from '../prefetch';
 import type { RuntimeConfig } from '../runtime';
 import {
@@ -33,8 +37,23 @@ export function createApplication(
   // Application-lifetime infrastructure is created in one visible place.
   const dependencies = createAppDependencies();
   const store = configureAppStore(dependencies);
-  const bootstrap = createBootstrapRuntime(runtimeConfig.bootstrapProfile);
   const analytics = createPortfolioAnalytics(runtimeConfig.analyticsStrategy);
+  const bootstrapServices = createMockBootstrapServices(
+    dependencies.clock,
+    window.localStorage,
+  );
+  const bootstrapOperations = createBootstrapOperations({
+    runtimeConfig,
+    store,
+    services: bootstrapServices,
+    analytics,
+    logger: dependencies.logger,
+    clock: dependencies.clock,
+  });
+  const bootstrap = createBootstrapRuntime(
+    runtimeConfig.bootstrapProfile,
+    bootstrapOperations,
+  );
 
   // Feature logic receives capabilities, not concrete infrastructure imports.
   const orderTicketServices = createMockOrderTicketServices();

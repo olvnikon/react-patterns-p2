@@ -1,8 +1,10 @@
 import { useSyncExternalStore } from 'react';
+import { useSelector } from 'react-redux';
 
 import type {
   BootstrapProfile,
 } from '../runtime';
+import { selectBootstrapData } from '../app/store/bootstrapDataSelectors';
 import type { ApplicationDiagnostics } from '../composition/applicationTypes';
 import { PatternNote } from './components/PatternNote';
 
@@ -51,6 +53,7 @@ function formatStatus(status: string): string {
 }
 
 export function StartupRoute({ diagnostics }: StartupRouteProps) {
+  const bootstrapData = useSelector(selectBootstrapData);
   const bootstrap = useSyncExternalStore(
     diagnostics.bootstrap.subscribe,
     diagnostics.bootstrap.getSnapshot,
@@ -128,6 +131,94 @@ export function StartupRoute({ diagnostics }: StartupRouteProps) {
         </article>
       </div>
 
+      <section className="bootstrap-section" aria-labelledby="outputs-title">
+        <div className="bootstrap-heading">
+          <div>
+            <p className="eyebrow">Real task outputs</p>
+            <h2 id="outputs-title">Bootstrap outputs in Redux</h2>
+          </div>
+          <span
+            className={`status-chip status-chip--${
+              bootstrapData.mainViewReady ? 'ready' : 'running'
+            }`}
+          >
+            {bootstrapData.mainViewReady ? 'Main View Ready' : 'Updating'}
+          </span>
+        </div>
+
+        <div className="diagnostics-grid">
+          <article className="workspace-panel">
+            <div>
+              <p className="eyebrow">Required outputs</p>
+              <span className="pattern-tag">Redux bootstrapData</span>
+            </div>
+            <dl>
+              <div>
+                <dt>Session</dt>
+                <dd>
+                  {bootstrapData.session
+                    ? `${bootstrapData.session.userId} · ${bootstrapData.session.deskId}`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+              <div>
+                <dt>Platform context</dt>
+                <dd>
+                  {bootstrapData.platformContext
+                    ? `${bootstrapData.platformContext.provider} · ${bootstrapData.platformContext.instrumentId}`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+              <div>
+                <dt>Reference data</dt>
+                <dd>
+                  {bootstrapData.referenceData
+                    ? `${bootstrapData.referenceData.instruments.length} instruments · ${bootstrapData.referenceData.portfolios.length} portfolios`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+              <div>
+                <dt>Workspace</dt>
+                <dd>
+                  {bootstrapData.workspace
+                    ? `${bootstrapData.workspace.selectedPortfolioId} · ${bootstrapData.workspace.layout}`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+            </dl>
+          </article>
+
+          <article className="workspace-panel">
+            <div>
+              <p className="eyebrow">Optional outputs</p>
+              <span className="pattern-tag">After Main View</span>
+            </div>
+            <dl>
+              <div>
+                <dt>Market data</dt>
+                <dd>
+                  {bootstrapData.marketData
+                    ? `${bootstrapData.marketData.status} · ${bootstrapData.marketData.connectedAt}`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+              <div>
+                <dt>Analytics warmup</dt>
+                <dd>
+                  {bootstrapData.analyticsWarmup
+                    ? `${bootstrapData.analyticsWarmup.strategy} · completed`
+                    : 'Waiting…'}
+                </dd>
+              </div>
+              <div>
+                <dt>Started at</dt>
+                <dd>{bootstrapData.startedAt ?? 'Waiting…'}</dd>
+              </div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
       <section className="bootstrap-section" aria-labelledby="bootstrap-title">
         <div className="bootstrap-heading">
           <div>
@@ -154,8 +245,8 @@ export function StartupRoute({ diagnostics }: StartupRouteProps) {
             </button>
           ))}
           <small>
-            Replay changes this diagnostic actor only; the mounted application
-            remains available for the presentation.
+            Replay reruns mocked operations and resets only bootstrapData; the
+            mounted application remains available for the presentation.
           </small>
         </div>
 

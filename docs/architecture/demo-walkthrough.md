@@ -40,7 +40,7 @@ private.
 | Strategy Pattern | `/analytics` | [`analyticsTypes.ts`](../../packages/feature-analytics-lab/src/model/analyticsTypes.ts), [`createPortfolioAnalytics.ts`](../../packages/feature-analytics-lab/src/model/createPortfolioAnalytics.ts) | [`directAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/directAnalyticsStrategy.ts), [`workerAnalyticsStrategy.ts`](../../packages/feature-analytics-lab/src/model/workerAnalyticsStrategy.ts) |
 | State Machines and Statecharts | `/workflows` | [`createOrderTicketMachine.ts`](../../packages/feature-workflow-lab/src/model/createOrderTicketMachine.ts) | [`createMockOrderTicketServices.ts`](../../packages/feature-workflow-lab/src/model/createMockOrderTicketServices.ts), [`useOrderTicket.ts`](../../packages/feature-workflow-lab/src/react/useOrderTicket.ts), [`OrderTicketEntry.tsx`](../../packages/feature-workflow-lab/src/OrderTicketEntry.tsx) |
 | Actor Model | `/workflows` | [`createWorkflowWorkspaceMachine.ts`](../../packages/feature-workflow-lab/src/model/createWorkflowWorkspaceMachine.ts) | [`externalContextSource.ts`](../../packages/feature-workflow-lab/src/model/externalContextSource.ts), [`WorkflowWorkspaceEntry.tsx`](../../packages/feature-workflow-lab/src/WorkflowWorkspaceEntry.tsx) |
-| Declarative Bootstrap Task Graph | `/startup` | [`bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts), [`createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts) | [`createBootstrapRuntime.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapRuntime.ts), [`StartupRoute.tsx`](../../apps/financial-workspace/src/routes/StartupRoute.tsx) |
+| Declarative Bootstrap Task Graph | `/startup` | [`bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts), [`createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts) | [`createBootstrapOperations.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapOperations.ts), [`createMockBootstrapServices.ts`](../../apps/financial-workspace/src/bootstrap/createMockBootstrapServices.ts), [`bootstrapDataSlice.ts`](../../apps/financial-workspace/src/app/store/bootstrapDataSlice.ts), [`createBootstrapRuntime.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapRuntime.ts), [`StartupRoute.tsx`](../../apps/financial-workspace/src/routes/StartupRoute.tsx) |
 | Web Worker Offloading | `/analytics` | [`createWorkerScenarioClient.ts`](../../packages/feature-analytics-lab/src/worker/createWorkerScenarioClient.ts), [`scenario.worker.ts`](../../packages/feature-analytics-lab/src/worker/scenario.worker.ts) | [`workerProtocol.ts`](../../packages/feature-analytics-lab/src/worker/workerProtocol.ts), [`calculateScenario.ts`](../../packages/feature-analytics-lab/src/model/calculateScenario.ts), [`AnalyticsEntry.tsx`](../../packages/feature-analytics-lab/src/AnalyticsEntry.tsx) |
 | Intent-Based Prefetching | Navigation, `/startup`, `/panels` | [`createPreloadRegistry.ts`](../../apps/financial-workspace/src/prefetch/createPreloadRegistry.ts), [`createIntentHandlers.ts`](../../apps/financial-workspace/src/prefetch/createIntentHandlers.ts) | [`routeModules.ts`](../../apps/financial-workspace/src/routes/routeModules.ts), [`routes.tsx`](../../apps/financial-workspace/src/app/routes.tsx), [`panelLoaders.ts`](../../packages/feature-dynamic-panels/src/model/panelLoaders.ts) |
 | Graceful Capability Degradation | `/panels` | [`DynamicPanelHost.tsx`](../../packages/feature-dynamic-panels/src/internal/DynamicPanelHost.tsx), [`PanelErrorBoundary.tsx`](../../packages/feature-dynamic-panels/src/internal/PanelErrorBoundary.tsx) | [`panelDefinitions.ts`](../../packages/feature-dynamic-panels/src/model/panelDefinitions.ts), [`DynamicPanelsEntry.tsx`](../../packages/feature-dynamic-panels/src/DynamicPanelsEntry.tsx), [`panels/`](../../packages/feature-dynamic-panels/src/panels) |
@@ -57,6 +57,9 @@ private.
 4. In **Composition diagnostics**, point out that concrete implementations and
    their lifetimes are listed in one place. For example,
    `PortfolioAnalytics` is wired to `WorkerAnalyticsStrategy`.
+5. In **Bootstrap outputs in Redux**, show the data produced by the initial
+   bootstrap: demo session, platform context, reference-data counts, restored
+   workspace, market-data connection, and analytics warmup.
 
 No button changes Runtime Configuration in place. This is intentional:
 configuration is read before the application is created. The Strategy demo
@@ -65,17 +68,24 @@ later performs a full application restart to select another configuration.
 ### Demonstrate the Bootstrap Task Graph
 
 1. Under **Replay profile**, click **Slow**.
-2. Watch **Infrastructure** and **Platform context** enter `Running` together.
+2. Watch **Bootstrap outputs in Redux** reset to `Waiting…`. Replay reruns the
+   mocked operations rather than only animating task cards.
+3. Watch **Infrastructure** and **Platform context** enter `Running` together.
    This demonstrates independent branches executing in parallel.
-3. Watch **Demo session** wait for Infrastructure, then **Reference data** and
+4. Watch **Demo session** wait for Infrastructure, then **Reference data** and
    **Workspace state** run together.
-4. Point out that **Market data** and **Analytics warmup** remain idle until
+5. As tasks complete, watch their outputs appear in Redux. Reference Data
+   produces three instruments and two portfolios; Workspace State restores
+   `PF-001` from localStorage.
+6. Point out that **Market data** and **Analytics warmup** remain idle until
    **Main view** becomes ready. They are optional background tasks.
-5. Click **Optional failure** and wait for **Analytics warmup** to show
+7. Click **Optional failure** and wait for **Analytics warmup** to show
    `Failed`. The overall graph becomes `Degraded`, but the note still says
-   **Main View Ready**.
-6. On the failed **Analytics warmup** card, click **Retry task**. The second
-   attempt succeeds and the graph becomes `Ready`.
+   **Main View Ready**. Its Redux output remains `Waiting…` because the real
+   warmup calculation did not complete.
+8. On the failed **Analytics warmup** card, click **Retry task**. The second
+   attempt runs the configured Strategy, stores its output, and changes the
+   graph to `Ready`.
 
 Optional critical-failure comparison:
 
@@ -86,8 +96,9 @@ Optional critical-failure comparison:
    Workspace state and Platform context are reused, Main view runs, and the
    optional tasks start afterward.
 
-The replay controls operate on an isolated diagnostic actor, so a critical
-demo failure does not unmount the presentation UI.
+Replay replaces the bootstrap actor and resets only the `bootstrapData` Redux
+slice. A critical demo failure therefore does not unmount the already-mounted
+presentation UI or clear unrelated feature state.
 
 ### Open these files
 
@@ -98,6 +109,9 @@ demo failure does not unmount the presentation UI.
 5. [`composition/createApplication.tsx`](../../apps/financial-workspace/src/composition/createApplication.tsx)
 6. [`bootstrap/bootstrapTasks.ts`](../../apps/financial-workspace/src/bootstrap/bootstrapTasks.ts)
 7. [`bootstrap/createBootstrapMachine.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapMachine.ts)
+8. [`bootstrap/createBootstrapOperations.ts`](../../apps/financial-workspace/src/bootstrap/createBootstrapOperations.ts)
+9. [`bootstrap/createMockBootstrapServices.ts`](../../apps/financial-workspace/src/bootstrap/createMockBootstrapServices.ts)
+10. [`app/store/bootstrapDataSlice.ts`](../../apps/financial-workspace/src/app/store/bootstrapDataSlice.ts)
 
 Explain:
 

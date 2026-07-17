@@ -205,7 +205,7 @@ the higher application boundary.
 | Strategy Pattern | `/analytics`; `packages/feature-analytics-lab` | Direct and Worker-backed implementations satisfy the same `PortfolioAnalytics` contract. |
 | State Machines and Statecharts | `/workflows` in Single Ticket mode | One explicit workflow owns valid states, guards, async work, timeout, and reconciliation. |
 | Actor Model for UI Orchestration | `/workflows` in Actor Workspace mode | Independent ticket actors own private state and lifecycle and communicate through messages. |
-| Declarative Bootstrap Task Graph | `/startup`; `apps/financial-workspace/src/bootstrap` | Named XState-managed tasks expose dependencies, parallelism, criticality, retry, and readiness. |
+| Declarative Bootstrap Task Graph | `/startup`; `apps/financial-workspace/src/bootstrap` | Named XState-managed tasks execute injected mock services, store outputs in Redux, and expose dependencies, parallelism, retry, and readiness. |
 | Web Worker Offloading | `/analytics` with Worker Strategy | CPU-heavy synthetic work runs in a module Worker while the main-thread heartbeat remains responsive. |
 | Intent-Based Prefetching | Part 2 navigation, `/startup`, and `/panels` | Hover or keyboard focus starts a cached lazy import that route or panel activation later reuses. |
 | Graceful Capability Degradation | `/panels` | A panel can become stale, degraded, failed, or disabled without crashing its siblings. |
